@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+089765f8683d7b41166471dc1d7057b5 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation_automoc
+b09b2448e6f8d95db063f0d18c721a9d loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions_automoc
+060a63f193a3fa7c64b1945f55e5eb68 loop_functions/word_loop_functions/CMakeFiles/word_loop_functions_automoc
