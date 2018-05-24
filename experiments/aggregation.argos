@@ -34,7 +34,7 @@
       </sensors>
       <params 
 	goStraight="80" walkInsideSpot="20" waitInsideSpot="40" leaveInsideSpot="100"
- minDist="70" aParam="2.6" bParam="2.2" leaveTurns="1" stayTurns="1" walkTurns="1" rule="3" informedSpot="0" numInformedRobot="12" />
+ minDist="70" aParam="2.6" bParam="2.2" leaveTurns="1" stayTurns="1" walkTurns="1" rule="3" informedSpot="0" numInformedRobot="10" />
     </footbot_aggregation_controller>
 
   </controllers>

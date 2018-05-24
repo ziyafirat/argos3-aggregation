@@ -304,37 +304,38 @@ void CAggregation::PostStep() {
 					it->second);
 			CFootBotAggregation& controller =
 					static_cast<CFootBotAggregation&>(footbotEntity.GetControllableEntity().GetController());
-			string state = controller.GetState();
-			//if(state=="STAY") {
-			Real Robot_X =
-					footbotEntity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX();
-			Real Robot_Y =
-					footbotEntity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY();
-			positions.push_back(make_pair(Robot_X, Robot_Y));
+			string state = controller.GetStateStep();
+			if (state == "STAY") {
+				Real Robot_X =
+						footbotEntity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX();
+				Real Robot_Y =
+						footbotEntity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY();
+				positions.push_back(make_pair(Robot_X, Robot_Y));
 
 //			m_cOutFile << "    " << Robot_X << " \t         " << Robot_Y
 //					<< endl;
 
-			cFootbotPosition.Set(Robot_X, Robot_Y);
+				cFootbotPosition.Set(Robot_X, Robot_Y);
 
-			Real fDistanceSpotBlack =
-					(m_cCoordBlackSpot - cFootbotPosition).Length();
-			if (fDistanceSpotBlack <= m_fRadius) {
-				blackSpotCount += 1;
+				Real fDistanceSpotBlack =
+						(m_cCoordBlackSpot - cFootbotPosition).Length();
+				if (fDistanceSpotBlack <= m_fRadius) {
+					blackSpotCount += 1;
 
-			}
+				}
 
-			Real fDistanceSpotWhite =
-					(m_cCoordWhiteSpot - cFootbotPosition).Length();
-			if (fDistanceSpotWhite <= m_fRadius) {
-				whiteSpotCount += 1;
+				Real fDistanceSpotWhite =
+						(m_cCoordWhiteSpot - cFootbotPosition).Length();
+				if (fDistanceSpotWhite <= m_fRadius) {
+					whiteSpotCount += 1;
 
-			}
+				}
 
-			if (fDistanceSpotBlack > m_fRadius
-					&& fDistanceSpotWhite > m_fRadius) {
-				outsideSpotCount += 1;
+				if (fDistanceSpotBlack > m_fRadius
+						&& fDistanceSpotWhite > m_fRadius) {
+					outsideSpotCount += 1;
 
+				}
 			}
 
 			//int spotCount= controller.CountNeighbours();
@@ -343,7 +344,7 @@ void CAggregation::PostStep() {
 //			lexi = controller.CountNeighbours();
 //			for (int i = 0; i < lexi.size(); ++i)
 //				words.insert(lexi[i]);
-//			//}
+//
 		}
 		m_cOutFile << clock << "	" << blackSpotCount / cFBMap.size() << "	"
 				<< whiteSpotCount / cFBMap.size() << endl;

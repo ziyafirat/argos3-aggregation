@@ -95,6 +95,8 @@ public:
 
 	virtual string GetState();
 
+	virtual string GetStateStep();
+
 	//virtual string IntToString ( int number );
 
 	virtual int LastMove();

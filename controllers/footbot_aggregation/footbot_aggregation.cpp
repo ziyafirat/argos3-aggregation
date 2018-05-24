@@ -149,6 +149,21 @@ void CFootBotAggregation::ControlStep() {
 		--avoidTurns;
 }
 
+string CFootBotAggregation::GetStateStep() {
+	switch (stateStep) {
+	case STATE_WALK:
+		return "WALK";
+		break;
+	case STATE_STAY:
+		return "STAY";
+		break;
+	case STATE_LEAVE:
+		return "LEAVE";
+		break;
+	}
+	return "0";
+}
+
 /****************************************/
 /****************************************/
 
