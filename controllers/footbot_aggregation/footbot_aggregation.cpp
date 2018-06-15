@@ -26,8 +26,8 @@ CFootBotAggregation::CFootBotAggregation() :
 				0), left(0), right(0), goStraight(50), obstacleFlag(0), rho(
 				0.5), blackSpotCounter(0), goBlackPoint(0), waitBlackPoint(0), differentialDrive(
 				18), walkInsideSpot(150), leaveInsideSpot(400), currentWord(0), waitInsideSpot(
-				10), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), robotNum(
-				0), numInformedRobot(10), informedSpot(0), m_pcRABA(
+				10), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
+				""), robotNum(0), numInformedRobot(10), informedSpot(0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGround(
 		NULL), state(0), stateStep(0), avoidTurns(0), stayTurns(0), leaveTurns(
@@ -128,7 +128,6 @@ void CFootBotAggregation::Reset() {
 	UpdateState(STATE_WALK);
 }
 
-
 /****************************************/
 /****************************************/
 
@@ -175,7 +174,8 @@ void CFootBotAggregation::WalkStep() {
 		blackSpotCounter = 0;
 		goBlackPoint = 0;
 		waitBlackPoint = 0;
-
+		spotOut = "";
+		walkInsideSpot=m_pcRNG->Uniform(CRange<Real>(100.0, 500.0));
 		// Go straight  times - step.
 		if (counter < goStraight && left == 0 && right == 0) {
 			/* Go straight */
@@ -199,9 +199,30 @@ void CFootBotAggregation::StayStep() {
 	if (goBlackPoint < walkInsideSpot) {
 		MoveStep();
 		goBlackPoint++;
-		if (CheckSpot() == STATE_WALK) {
+
+		if (goBlackPoint > 50) {
+			/* Read stuff from the ground sensor */
+			const CCI_FootBotMotorGroundSensor::TReadings& tGroundReads =
+					m_pcGround->GetReadings();
+			const CCI_RangeAndBearingSensor::TReadings& tPackets =
+					m_pcRABS->GetReadings();
+
+			if ((Abs(tGroundReads[0].Value) > 0.1f && Abs(tGroundReads[0].Value) <0.9f)
+					|| (Abs(tGroundReads[1].Value) > 0.1f  && Abs(tGroundReads[1].Value) <0.9f)
+					|| (Abs(tGroundReads[2].Value) > 0.1f  && Abs(tGroundReads[2].Value) <0.9f)
+					|| (Abs(tGroundReads[3].Value) > 0.1f  && Abs(tGroundReads[3].Value) <0.9f)) {
+
+				UpdateState(STATE_STAY);
+				goBlackPoint = walkInsideSpot;
+
+			}
+		}else if (CheckSpot() == STATE_WALK) {
 			UpdateState(STATE_WALK);
 		}
+//		if (spotOut == "WaitInside") {
+//			goBlackPoint = walkInsideSpot;
+//			UpdateState(STATE_STAY);
+//		}
 
 	} else {
 		if (waitBlackPoint < waitInsideSpot) {
@@ -328,22 +349,40 @@ void CFootBotAggregation::MoveStep() {
 }
 
 int CFootBotAggregation::CheckSpot() {
+
 	/* Read stuff from the ground sensor */
 	const CCI_FootBotMotorGroundSensor::TReadings& tGroundReads =
 			m_pcGround->GetReadings();
 	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 			m_pcRABS->GetReadings();
 
-	if (Abs(tGroundReads[0].Value) < 0.05f && Abs(tGroundReads[1].Value) < 0.05f
-			&& Abs(tGroundReads[2].Value) < 0.05f
-			&& Abs(tGroundReads[3].Value) < 0.05f) {
+//	if (spotOut == "inside") {
+//		if (Abs(tGroundReads[0].Value) > 0.05f
+//				|| Abs(tGroundReads[1].Value) > 0.05f
+//				|| Abs(tGroundReads[2].Value) > 0.05f
+//				|| Abs(tGroundReads[3].Value) > 0.05f) {
+//
+//			return InformedRobot(1);
+//
+//		} else if (Abs(tGroundReads[0].Value - 1.0f) > 0.05f
+//				|| Abs(tGroundReads[1].Value - 1.0f) > 0.05f
+//				|| Abs(tGroundReads[2].Value - 1.0f) > 0.05f
+//				|| Abs(tGroundReads[3].Value - 1.0f) > 0.05f) {
+//
+//			return InformedRobot(0);
+//		}
+//	}
+
+	if (Abs(tGroundReads[0].Value) < 0.05f || Abs(tGroundReads[1].Value) < 0.05f
+			|| Abs(tGroundReads[2].Value) < 0.05f
+			|| Abs(tGroundReads[3].Value) < 0.05f) {
 
 		return InformedRobot(1);
 
 	} else if (Abs(tGroundReads[0].Value - 1.0f) < 0.05f
-			&& Abs(tGroundReads[1].Value - 1.0f) < 0.05f
-			&& Abs(tGroundReads[2].Value - 1.0f) < 0.05f
-			&& Abs(tGroundReads[3].Value - 1.0f) < 0.05f) {
+			|| Abs(tGroundReads[1].Value - 1.0f) < 0.05f
+			|| Abs(tGroundReads[2].Value - 1.0f) < 0.05f
+			|| Abs(tGroundReads[3].Value - 1.0f) < 0.05f) {
 
 		return InformedRobot(0);
 
@@ -360,10 +399,18 @@ int CFootBotAggregation::InformedRobot(int spot) {
 		if (value < numInformedRobot) {
 			return STATE_LEAVE;
 		} else {
+//			if (spotOut == "inside") {
+//				spotOut = "WaitInside";
+//			}
 			return STATE_STAY;
 		}
-	} else
+	} else {
+//		if (spotOut == "inside") {
+//			spotOut = "WaitInside";
+//		}
+
 		return STATE_STAY;
+	}
 }
 
 /****************************************/
@@ -594,7 +641,7 @@ int CFootBotAggregation::LastMove() {
 
 int CFootBotAggregation::random_turn_lenght(double ran) {
 
-	//double ran = rand() / double(RAND_MAX);
+//double ran = rand() / double(RAND_MAX);
 	/*Random number between 0,differentialDrive 180 degree  */
 	double c = ((2.0 * rho) / (1.0 + (rho * rho)));
 	double V = cos(ran * TWO_PI);

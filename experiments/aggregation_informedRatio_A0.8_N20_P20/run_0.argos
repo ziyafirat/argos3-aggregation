@@ -4,8 +4,8 @@
   
   
   <framework>
-    <system threads="0" />
-    <experiment length="2500" random_seed="26560" ticks_per_second="10" />
+    <system threads="1" />
+    <experiment length="2500" random_seed="72028" ticks_per_second="10" />
   </framework>
   
   
@@ -28,7 +28,7 @@
 <range_and_bearing implementation="medium" medium="rab" show_rays="false" />
    	<footbot_motor_ground implementation="rot_z_only" />
       </sensors>
-      <params aParam="2.6" bParam="2.2" goStraight="80" informedSpot="0" leaveInsideSpot="100" leaveTurns="1" minDist="70" numInformedRobot="20" rule="3" stayTurns="1" waitInsideSpot="40" walkInsideSpot="20" walkTurns="1" />
+      <params aParam="2.6" bParam="2.2" goStraight="400" informedSpot="0" leaveInsideSpot="250" leaveTurns="1" minDist="70" numInformedRobot="20" rule="3" stayTurns="1" waitInsideSpot="250" walkInsideSpot="400" walkTurns="1" />
     </footbot_aggregation_controller>
 
   </controllers>
@@ -36,12 +36,12 @@
    
   
   
-  <arena center="0,0,0.5" size="6, 6, 1">
+  <arena center="0,0,0.5" size="6,6,1">
       
       
 
     <distribute>
-      <position max="2,2,0" method="uniform" min="-2,-2,0" /> 
+      <position max="2,2,0" method="uniform" min="-2,-2,-0" /> 
       <orientation mean="0,0,0" method="gaussian" std_dev="360,0,0" /> 
       <entity max_trials="100" quantity="20"> 
         <foot-bot id="" rab_range="1">
@@ -79,6 +79,17 @@
 
   
   
-  
+   
+   <visualization>      
+    <qt-opengl lua_editor="false">
+      <user_functions label="word_qtuser_functions" library="../build/loop_functions/word_loop_functions/libword_loop_functions" />
+      <camera>
+        <placement idx="0" lens_focal_length="35" look_at="-0.00569879,0.01,3.86243" position="-0.00569879,0.01,7" />
+        <placement idx="1" lens_focal_length="35" look_at="0,0,0" position="-2,0,2" />
+        <placement idx="2" lens_focal_length="35" look_at="0.924486,-0.486744,-0.0415919" position="0.884183,0.359128,0.490269" />
+      </camera>
+    </qt-opengl>
+
+  </visualization> 
 
 </argos-configuration>

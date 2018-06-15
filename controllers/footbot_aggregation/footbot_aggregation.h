@@ -154,6 +154,7 @@ protected:
 	int leaveTurns;
 	int stayTurns;
 	int walkTurns;
+	string spotOut;
 	unsigned short int state;
 
 	unsigned short int stateStep;
