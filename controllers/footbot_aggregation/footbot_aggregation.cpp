@@ -233,7 +233,7 @@ void CFootBotAggregation::StayStep() {
 
 				if (spotTurns < 20) {
 
-					/* Turn right, depending on the sign of the angle   */
+					/* Turn right, depending on the sign of the angle  .  */
 					m_pcWheels->SetLinearVelocity(m_fWheelVelocity,
 							-m_fWheelVelocity);
 					spotTurns++;
