@@ -5,16 +5,16 @@
   <!-- * General configuration * -->
   <!-- ************************* -->
   <framework>
-    <system threads="1" />
+    <system threads="2" />
     <experiment length="2500"
                 ticks_per_second="10" 
-		random_seed="1"/>
+		random_seed="100"/>
   </framework>
   
   <!-- ****************** -->
   <!-- * Loop functions * -->
   <!-- ****************** -->
-  <loop_functions library="../build/loop_functions/aggregation_loop_functions/libaggregation_loop_functions" label="aggregation_loop_functions" output="result.txt" minDist="70" timeStopCond="0" radiusSpot="2.0" blackSpotSize="3.0" whiteSpotSize="3.0"   />
+  <loop_functions library="../build/loop_functions/aggregation_loop_functions/libaggregation_loop_functions" label="aggregation_loop_functions" output="result.txt" minDist="200" timeStopCond="0" radiusSpot="2.0" blackSpotSize="3.0" whiteSpotSize="3.0"   />
 
   <!-- *************** -->
   <!-- * Controllers * -->
@@ -33,7 +33,7 @@
    	<footbot_motor_ground implementation="rot_z_only" />
       </sensors>
       <params 
-	goStraight="800" walkInsideSpot="400" waitInsideSpot="250" leaveInsideSpot="250"
+	goStraight="900" walkInsideSpot="400" waitInsideSpot="100" leaveInsideSpot="200"
  minDist="250" aParam="2.6" bParam="2.2" leaveTurns="1" stayTurns="1" walkTurns="1" rule="3" informedSpot="0" numInformedRobot="10" />
     </footbot_aggregation_controller>
 
@@ -98,6 +98,6 @@
       </camera>
     </qt-opengl>
 
-  </visualization>  --> 
+  </visualization>   -->
 
 </argos-configuration>

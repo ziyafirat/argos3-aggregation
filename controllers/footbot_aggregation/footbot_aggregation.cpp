@@ -22,17 +22,18 @@
 
 CFootBotAggregation::CFootBotAggregation() :
 		m_pcWheels(NULL), m_pcProximity(NULL), m_cAlpha(90.0f), m_fDelta(0.5f), m_fWheelVelocity(
-				2.5f), minDist(1), a(0.14f), b(0), numOfTimeStepTurning(0), counter(
+				2.5f), minDist(100), a(0.14f), b(0), numOfTimeStepTurning(0), counter(
 				0), left(0), right(0), goStraight(50), obstacleFlag(0), rho(
 				0.5), blackSpotCounter(0), goBlackPoint(0), waitBlackPoint(0), differentialDrive(
 				18), walkInsideSpot(150), leaveInsideSpot(400), currentWord(0), waitInsideSpot(
-				10), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
+				50), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
 				""), robotNum(0), numInformedRobot(10), informedSpot(0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGround(
 		NULL), state(0), stateStep(0), avoidTurns(0), stayTurns(0), leaveTurns(
-				0), walkTurns(1), probaRule(3), lastMove(0), m_cGoStraightAngleRange(
-				-ToRadians(m_cAlpha), ToRadians(m_cAlpha)) {
+				0), walkTurns(1), spotTurns(0), spotFlag(0), probaRule(3), lastMove(
+				0), m_cGoStraightAngleRange(-ToRadians(m_cAlpha),
+				ToRadians(m_cAlpha)) {
 }
 
 /****************************************/
@@ -118,6 +119,8 @@ void CFootBotAggregation::Reset() {
 	leaveTurns = 0;
 	stayTurns = 0;
 	walkTurns = 1;
+	spotTurns = 0;
+	spotFlag = 0;
 	counter = 0;
 	numOfTimeStepTurning = 0;
 	left = 0;
@@ -174,8 +177,10 @@ void CFootBotAggregation::WalkStep() {
 		blackSpotCounter = 0;
 		goBlackPoint = 0;
 		waitBlackPoint = 0;
+		spotTurns = 0;
+		spotFlag = 0;
 		spotOut = "";
-		walkInsideSpot=m_pcRNG->Uniform(CRange<Real>(100.0, 500.0));
+		walkInsideSpot = m_pcRNG->Uniform(CRange<Real>(100.0, 400.0));
 		// Go straight  times - step.
 		if (counter < goStraight && left == 0 && right == 0) {
 			/* Go straight */
@@ -200,24 +205,56 @@ void CFootBotAggregation::StayStep() {
 		MoveStep();
 		goBlackPoint++;
 
-		if (goBlackPoint > 50) {
+		if (goBlackPoint > 40 && spotFlag == 0) {
 			/* Read stuff from the ground sensor */
 			const CCI_FootBotMotorGroundSensor::TReadings& tGroundReads =
 					m_pcGround->GetReadings();
 			const CCI_RangeAndBearingSensor::TReadings& tPackets =
 					m_pcRABS->GetReadings();
 
-			if ((Abs(tGroundReads[0].Value) > 0.1f && Abs(tGroundReads[0].Value) <0.9f)
-					|| (Abs(tGroundReads[1].Value) > 0.1f  && Abs(tGroundReads[1].Value) <0.9f)
-					|| (Abs(tGroundReads[2].Value) > 0.1f  && Abs(tGroundReads[2].Value) <0.9f)
-					|| (Abs(tGroundReads[3].Value) > 0.1f  && Abs(tGroundReads[3].Value) <0.9f)) {
+			if ((Abs(tGroundReads[0].Value) > 0.1f
+					&& Abs(tGroundReads[0].Value) < 0.9f)
+					|| (Abs(tGroundReads[1].Value) > 0.1f
+							&& Abs(tGroundReads[1].Value) < 0.9f)
+					|| (Abs(tGroundReads[2].Value) > 0.1f
+							&& Abs(tGroundReads[2].Value) < 0.9f)
+					|| (Abs(tGroundReads[3].Value) > 0.1f
+							&& Abs(tGroundReads[3].Value) < 0.9f)) {
 
-				UpdateState(STATE_STAY);
-				goBlackPoint = walkInsideSpot;
+//				UpdateState(STATE_STAY);
+				//goBlackPoint = walkInsideSpot;
 
+//				m_pcWheels->SetLinearVelocity(-m_fWheelVelocity, m_fWheelVelocity);
+//						avoidTurns = m_pcRNG->Uniform(
+//								CRange<UInt32>(0.25 * COMPLETE_TURN, 0.75 * COMPLETE_TURN));
+
+//				m_pcWheels->SetLinearVelocity(-m_fWheelVelocity,
+//						m_fWheelVelocity);
+
+				if (spotTurns < 20) {
+
+					/* Turn right, depending on the sign of the angle   */
+					m_pcWheels->SetLinearVelocity(m_fWheelVelocity,
+							-m_fWheelVelocity);
+					spotTurns++;
+					//spotFlag = 0;
+
+				}
+
+//				for (int i = 0; i < 10; i++) {
+//				MoveStep();
+//			}
+
+			} else if (spotTurns > 0 && spotTurns < 20) {
+				/* Turn right, depending on the sign of the angle   */
+				m_pcWheels->SetLinearVelocity(m_fWheelVelocity,
+						-m_fWheelVelocity);
+				spotTurns++;
 			}
-		}else if (CheckSpot() == STATE_WALK) {
+
+		} else if (CheckSpot() == STATE_WALK) {
 			UpdateState(STATE_WALK);
+			spotTurns = 0;
 		}
 //		if (spotOut == "WaitInside") {
 //			goBlackPoint = walkInsideSpot;
@@ -225,11 +262,13 @@ void CFootBotAggregation::StayStep() {
 //		}
 
 	} else {
+		spotTurns = 0;
 		if (waitBlackPoint < waitInsideSpot) {
 			waitBlackPoint++;
 			UpdateState(STATE_STAY);
 		} else {
 			waitBlackPoint = 0;
+			//spotFlag=1;
 			float p = ComputeProba(CountNeighbours());
 			if (m_pcRNG->Uniform(CRange<Real>(0.0, 1.0)) < p) {
 				UpdateState(STATE_LEAVE);
@@ -267,13 +306,14 @@ void CFootBotAggregation::UpdateState(unsigned short int newState) {
 		//speak(true);
 		break;
 	case STATE_LEAVE:
+		spotFlag = 1;
 		MoveStep();
 		break;
 	}
 }
 
 void CFootBotAggregation::RandomTurn() {
-	// random turn
+// random turn
 	if (counter == goStraight && left == 0 && right == 0) {
 		counter = 0;
 		numOfTimeStepTurning = 0;
@@ -328,6 +368,10 @@ void CFootBotAggregation::MoveStep() {
 		avoidTurns = m_pcRNG->Uniform(
 				CRange<UInt32>(0.25 * COMPLETE_TURN, 0.75 * COMPLETE_TURN));
 
+		if (spotFlag == 0) {
+			spotTurns = 0;
+		}
+
 //		if(obstacleFlag=-0)
 		//m_pcWheels->SetLinearVelocity(-m_fWheelVelocity, m_fWheelVelocity);
 //		else{
@@ -345,6 +389,7 @@ void CFootBotAggregation::MoveStep() {
 
 	} else {
 		m_pcWheels->SetLinearVelocity(m_fWheelVelocity, m_fWheelVelocity);
+		//spotTurns=0;
 	}
 }
 
