@@ -25,7 +25,7 @@ CFootBotAggregation::CFootBotAggregation() :
 				2.5f), minDist(100), a(0.14f), b(0), numOfTimeStepTurning(0), counter(
 				0), left(0), right(0), goStraight(50), obstacleFlag(0), rho(
 				0.5), blackSpotCounter(0), goBlackPoint(0), waitBlackPoint(0), differentialDrive(
-				18), walkInsideSpot(150), leaveInsideSpot(400), currentWord(0), waitInsideSpot(
+				18), walkInsideSpot(150), leaveInsideSpot(800), currentWord(0), waitInsideSpot(
 				50), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
 				""), robotNum(0), numInformedRobot(10), informedSpot(0), m_pcRABA(
 		NULL), m_pcRABS(
@@ -180,7 +180,7 @@ void CFootBotAggregation::WalkStep() {
 		spotTurns = 0;
 		spotFlag = 0;
 		spotOut = "";
-		walkInsideSpot = m_pcRNG->Uniform(CRange<Real>(100.0, 400.0));
+		walkInsideSpot =500;// m_pcRNG->Uniform(CRange<Real>(300.0, 800.0));
 		// Go straight  times - step.
 		if (counter < goStraight && left == 0 && right == 0) {
 			/* Go straight */
