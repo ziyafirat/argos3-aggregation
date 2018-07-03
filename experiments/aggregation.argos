@@ -33,7 +33,7 @@
    	<footbot_motor_ground implementation="rot_z_only" />
       </sensors>
       <params 
-	goStraight="1200" walkInsideSpot="400" waitInsideSpot="100" leaveInsideSpot="800"
+	goStraight="1500" walkInsideSpot="500" waitInsideSpot="200" leaveInsideSpot="800"
  minDist="400" aParam="2.6" bParam="2.2" leaveTurns="1" stayTurns="1" walkTurns="1" rule="3" informedSpot="0" numInformedRobot="10" />
     </footbot_aggregation_controller>
 
