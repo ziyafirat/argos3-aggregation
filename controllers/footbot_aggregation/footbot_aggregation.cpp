@@ -26,12 +26,12 @@ CFootBotAggregation::CFootBotAggregation() :
 				0), left(0), right(0), goStraight(50), obstacleFlag(0), rho(
 				0.5), blackSpotCounter(0), goBlackPoint(0), waitBlackPoint(0), differentialDrive(
 				18), walkInsideSpot(150), leaveInsideSpot(800), currentWord(0), waitInsideSpot(
-				50), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
+				200), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
 				""), robotNum(0), numInformedRobot(10), informedSpot(0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGround(
 		NULL), state(0), stateStep(0), avoidTurns(0), stayTurns(0), leaveTurns(
-				0), walkTurns(1), spotTurns(0), spotFlag(0), probaRule(3), lastMove(
+				0), walkTurns(1), spotTurns(0), spotFlag(0), probaRule(2), lastMove(
 				0), m_cGoStraightAngleRange(-ToRadians(m_cAlpha),
 				ToRadians(m_cAlpha)) {
 }
@@ -180,7 +180,7 @@ void CFootBotAggregation::WalkStep() {
 		spotTurns = 0;
 		spotFlag = 0;
 		spotOut = "";
-		walkInsideSpot =500;// m_pcRNG->Uniform(CRange<Real>(300.0, 800.0));
+		walkInsideSpot = goStraight; // 500; // m_pcRNG->Uniform(CRange<Real>(300.0, 800.0));
 		// Go straight  times - step.
 		if (counter < goStraight && left == 0 && right == 0) {
 			/* Go straight */
@@ -240,6 +240,8 @@ void CFootBotAggregation::StayStep() {
 					//spotFlag = 0;
 
 				}
+
+				walkInsideSpot = goBlackPoint + goBlackPoint / 2;
 
 //				for (int i = 0; i < 10; i++) {
 //				MoveStep();
@@ -370,6 +372,10 @@ void CFootBotAggregation::MoveStep() {
 
 		if (spotFlag == 0) {
 			spotTurns = 0;
+		}
+
+		if(goBlackPoint>40){
+			goBlackPoint=walkInsideSpot;
 		}
 
 //		if(obstacleFlag=-0)
@@ -520,12 +526,13 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 		--n;
 		switch (stateStep) {
 		case STATE_WALK: //P_join
-			return 0.05 + 0.45 * (1 - exp(-a * n));
-			//return 0.03+0.48*(1-exp(-a*n));
+			//return 0.05 + 0.45 * (1 - exp(-a * n));
+			return 0.03 + 0.48 * (1 - exp(-a * n));
 			break;
 		case STATE_STAY: //1-P_leave
-			return 1 - 0.75 * exp(-b * n);
+			//return 1 - 0.75 * exp(-b * n);
 			//return 1-exp(-b*n);
+			return exp(-b * n);
 			break;
 		}
 		break;
@@ -601,10 +608,11 @@ void CFootBotAggregation::Move() {
 }
 
 void CFootBotAggregation::ChangeState(unsigned short int newState) {
-	if (probaRule == 2) {
-		if (newState == STATE_LEAVE)
-			newState = STATE_WALK;
-	}
+//	if (probaRule == 2) {
+//		if (newState == STATE_LEAVE)
+//			newState = STATE_WALK;
+//	}
+
 	m_pcRABA->SetData(0, newState);
 	state = newState;
 	switch (newState) {
