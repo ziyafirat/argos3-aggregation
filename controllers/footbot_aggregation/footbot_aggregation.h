@@ -156,6 +156,7 @@ protected:
 	int walkTurns;
 	int spotTurns;
 	int spotFlag;
+	int exploratoryFlag;
 	string spotOut;
 	unsigned short int state;
 

@@ -27,7 +27,8 @@ CFootBotAggregation::CFootBotAggregation() :
 				0.5), blackSpotCounter(0), goBlackPoint(0), waitBlackPoint(0), differentialDrive(
 				18), walkInsideSpot(150), leaveInsideSpot(800), currentWord(0), waitInsideSpot(
 				200), m_fStayTurns(50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(
-				""), robotNum(0), numInformedRobot(10), informedSpot(0), m_pcRABA(
+				""), robotNum(0), numInformedRobot(10), informedSpot(0), exploratoryFlag(
+				0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGround(
 		NULL), state(0), stateStep(0), avoidTurns(0), stayTurns(0), leaveTurns(
@@ -126,6 +127,7 @@ void CFootBotAggregation::Reset() {
 	left = 0;
 	right = 0;
 	stateStep = 0;
+	exploratoryFlag = 0;
 	lexicon.clear();
 	m_pcRABA->ClearData();
 	UpdateState(STATE_WALK);
@@ -200,8 +202,12 @@ void CFootBotAggregation::WalkStep() {
 }
 
 void CFootBotAggregation::StayStep() {
+	CheckSpot();
+	if (exploratoryFlag == 0) {
 
-	if (goBlackPoint < walkInsideSpot) {
+		exploratoryFlag = 1;
+		UpdateState(STATE_LEAVE);
+	} else if (goBlackPoint < walkInsideSpot) {
 		MoveStep();
 		goBlackPoint++;
 
@@ -374,8 +380,8 @@ void CFootBotAggregation::MoveStep() {
 			spotTurns = 0;
 		}
 
-		if(goBlackPoint>40){
-			goBlackPoint=walkInsideSpot;
+		if (goBlackPoint > 40) {
+			goBlackPoint = walkInsideSpot;
 		}
 
 //		if(obstacleFlag=-0)
@@ -453,6 +459,7 @@ int CFootBotAggregation::InformedRobot(int spot) {
 //			if (spotOut == "inside") {
 //				spotOut = "WaitInside";
 //			}
+
 			return STATE_STAY;
 		}
 	} else {
@@ -460,6 +467,7 @@ int CFootBotAggregation::InformedRobot(int spot) {
 //			spotOut = "WaitInside";
 //		}
 
+		exploratoryFlag = 1;
 		return STATE_STAY;
 	}
 }
@@ -526,6 +534,7 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 		--n;
 		switch (stateStep) {
 		case STATE_WALK: //P_join
+
 			//return 0.05 + 0.45 * (1 - exp(-a * n));
 			return 0.03 + 0.48 * (1 - exp(-a * n));
 			break;
