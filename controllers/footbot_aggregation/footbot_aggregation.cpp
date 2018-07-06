@@ -202,12 +202,8 @@ void CFootBotAggregation::WalkStep() {
 }
 
 void CFootBotAggregation::StayStep() {
-	CheckSpot();
-	if (exploratoryFlag == 0) {
 
-		exploratoryFlag = 1;
-		UpdateState(STATE_LEAVE);
-	} else if (goBlackPoint < walkInsideSpot) {
+	if (goBlackPoint < walkInsideSpot) {
 		MoveStep();
 		goBlackPoint++;
 
@@ -459,7 +455,6 @@ int CFootBotAggregation::InformedRobot(int spot) {
 //			if (spotOut == "inside") {
 //				spotOut = "WaitInside";
 //			}
-
 			return STATE_STAY;
 		}
 	} else {
@@ -467,7 +462,6 @@ int CFootBotAggregation::InformedRobot(int spot) {
 //			spotOut = "WaitInside";
 //		}
 
-		exploratoryFlag = 1;
 		return STATE_STAY;
 	}
 }
