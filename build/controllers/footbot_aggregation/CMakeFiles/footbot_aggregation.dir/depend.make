@@ -18,6 +18,7 @@ controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggre
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/medium/medium.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/physics_engine/physics_engine.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/physics_engine/physics_model.h
+controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/sensor.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/space/positional_indices/grid.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/space/positional_indices/grid_impl.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/core/simulator/space/positional_indices/positional_index.h
@@ -52,6 +53,7 @@ controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggre
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/simulator/footbot_entity.h
+controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/simulator/footbot_motor_ground_rotzonly_sensor.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h
 controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h

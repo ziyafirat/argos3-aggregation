@@ -43,12 +43,23 @@ void CAggregation::Init(TConfigurationNode& t_tree) {
 	GetNodeAttributeOrDefault(t_tree, "timeStopCond", timeStopCond,
 			timeStopCond);
 
-//	m_fRadius = 0.6;
-//	m_cCoordBlackSpot = CVector2(-1.0, 0);
-//	m_cCoordWhiteSpot = CVector2(1.0, 0);
+//2 spots
+//	m_cCoordBlackSpot = CVector2(-blackSpotVector, 0);
+//	m_cCoordWhiteSpot = CVector2(whiteSpotVector, 0);
 
+//	m_fRadius = 0.6;
+
+//3 spots
 	m_cCoordBlackSpot = CVector2(-blackSpotVector, 0);
-	m_cCoordWhiteSpot = CVector2(whiteSpotVector, 0);
+	m_cCoordWhiteSpot = CVector2(whiteSpotVector, whiteSpotVector);
+	m_cCoordWhiteSpot2 = CVector2(whiteSpotVector, -whiteSpotVector);
+
+//4 spots
+//	m_cCoordBlackSpot = CVector2(-blackSpotVector, 4);
+//	m_cCoordBlackSpot2 = CVector2(-blackSpotVector, -4);
+//	m_cCoordWhiteSpot = CVector2(whiteSpotVector, 4);
+//	m_cCoordWhiteSpot2 = CVector2(whiteSpotVector, -4);
+
 	blackSpotCount = 0;
 	whiteSpotCount = 0;
 	outsideSpotCount = 0;
@@ -63,12 +74,14 @@ void CAggregation::Init(TConfigurationNode& t_tree) {
 
 	////////////////////////////////////////////////////////////////////////////////// CREATION AND POSITIONING OF THE ARENA WALLS////////////////////////////////////////////////////////////////////////////////
 	CVector3 arena_size = GetSpace().GetArenaSize();
-	int m_fArenaRadius = Min(arena_size[0], arena_size[1]) / 2;
-	int m_unNumArenaWalls = 30;
+	float m_fArenaRadius = Min(arena_size[0], arena_size[1]) / 2;
+	int m_unNumArenaWalls = 50;
 	CRadians wall_angle = CRadians::TWO_PI / m_unNumArenaWalls;
 	CVector3 wall_size(0.05,
 			2.0 * m_fArenaRadius * Tan(CRadians::PI / m_unNumArenaWalls), 0.1);
 	ostringstream entity_id;
+//	m_cOutFile << clock << "	arenaradius: " << m_fArenaRadius << "	" << m_fArenaRadius
+//			<< endl;
 	for (UInt32 i = 0; i < m_unNumArenaWalls; i++) {
 		entity_id.str("");
 		entity_id << "wall_" << i;
@@ -399,6 +412,22 @@ bool CAggregation::IsExperimentFinished() {
 
 argos::CColor CAggregation::GetFloorColor(
 		const argos::CVector2& c_position_on_plane) {
+
+//2 spots
+//	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
+//			c_position_on_plane.GetY());
+//	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::BLACK;
+//	}
+//	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::WHITE;
+//	}
+//
+//	return CColor::GRAY50;
+
+//3 spots
 	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
 			c_position_on_plane.GetY());
 	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
@@ -409,8 +438,34 @@ argos::CColor CAggregation::GetFloorColor(
 	if (d <= m_fRadius) {
 		return CColor::WHITE;
 	}
+	d = (vCurrentPoint - m_cCoordWhiteSpot2).Length();
+	if (d <= (m_fRadius)) {
+		return CColor::WHITE;
+	}
 
 	return CColor::GRAY50;
+
+// 4 spots
+//	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
+//			c_position_on_plane.GetY());
+//	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::BLACK;
+//	}
+//	d = (m_cCoordBlackSpot2 - vCurrentPoint).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::WHITE;
+//	}
+//	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::WHITE;
+//	}
+//	d = (vCurrentPoint - m_cCoordWhiteSpot2).Length();
+//	if (d <= (m_fRadius)) {
+//		return CColor::WHITE;
+//	}
+//
+//	return CColor::GRAY50;
 }
 
 /****************************************/

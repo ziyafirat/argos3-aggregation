@@ -30,11 +30,10 @@ CFootBotAggregation::CFootBotAggregation() :
 				""), robotNum(0), numInformedRobot(10), informedSpot(0), exploratoryFlag(
 				0), m_pcRABA(
 		NULL), m_pcRABS(
-		NULL), m_pcRNG(NULL), m_pcGround(
-		NULL), state(0), stateStep(0), avoidTurns(0), stayTurns(0), leaveTurns(
-				0), walkTurns(1), spotTurns(0), spotFlag(0), probaRule(2), lastMove(
-				0), m_cGoStraightAngleRange(-ToRadians(m_cAlpha),
-				ToRadians(m_cAlpha)) {
+		NULL), m_pcRNG(NULL), m_pcGroundZ(NULL), state(0), stateStep(0), avoidTurns(
+				0), stayTurns(0), leaveTurns(0), walkTurns(1), spotTurns(0), spotFlag(
+				0), probaRule(2), lastMove(0), m_cGoStraightAngleRange(
+				-ToRadians(m_cAlpha), ToRadians(m_cAlpha)) {
 }
 
 /****************************************/
@@ -69,8 +68,28 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 	m_pcRABA = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
 	m_pcRABS = GetSensor<CCI_RangeAndBearingSensor>("range_and_bearing");
 
-	m_pcGround = GetSensor<CCI_FootBotMotorGroundSensor>(
+//	m_pcGround = GetSensor<CCI_FootBotMotorGroundSensor>(
+//			"footbot_motor_ground");
+
+//	m_pcGround = GetSensor<CFootBotMotorGroundRotZOnlySensor::CCI_FootBotMotorGroundSensor>(
+//			"footbot_motor_ground");
+
+	m_pcGroundZ = GetSensor<CFootBotMotorGroundRotZOnlySensor>(
 			"footbot_motor_ground");
+
+//	const CCI_FootBotMotorGroundSensor::TReadings& tGroundReads2 =
+//								m_pcGroundZ->GetReadings();
+//
+//	const CFootBotMotorGroundRotZOnlySensor::TReadings& tGroundReads2 =
+//									m_pcGroundZ->m_bAddNoise();
+//
+
+//	const CFootBotMotorGroundRotZOnlySensor::TReadings& tGroundNoise =
+//						m_pcGroundZ->GetReadings();
+//
+//	m_pcGroundZ->
+//	bool sdf= m_pcGroundZ->m_bAddNoise;
+
 	/*
 	 * os3-examples
 	 *  the configuration file
@@ -208,9 +227,14 @@ void CFootBotAggregation::StayStep() {
 		goBlackPoint++;
 
 		if (goBlackPoint > 40 && spotFlag == 0) {
+
+			//test
+
+			//test ends
 			/* Read stuff from the ground sensor */
-			const CCI_FootBotMotorGroundSensor::TReadings& tGroundReads =
-					m_pcGround->GetReadings();
+			const CFootBotMotorGroundRotZOnlySensor::TReadings& tGroundReads =
+					m_pcGroundZ->GetReadings();
+
 			const CCI_RangeAndBearingSensor::TReadings& tPackets =
 					m_pcRABS->GetReadings();
 
@@ -403,11 +427,15 @@ void CFootBotAggregation::MoveStep() {
 
 int CFootBotAggregation::CheckSpot() {
 
+	CVector3 cVectorRobotToMessage;
 	/* Read stuff from the ground sensor */
-	const CCI_FootBotMotorGroundSensor::TReadings& tGroundReads =
-			m_pcGround->GetReadings();
+	const CFootBotMotorGroundRotZOnlySensor::TReadings& tGroundReads =
+			m_pcGroundZ->GetReadings();
 	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 			m_pcRABS->GetReadings();
+
+
+	//m_pcGroundZ->Update();
 
 //	if (spotOut == "inside") {
 //		if (Abs(tGroundReads[0].Value) > 0.05f
@@ -425,6 +453,18 @@ int CFootBotAggregation::CheckSpot() {
 //			return InformedRobot(0);
 //		}
 //	}
+
+
+
+
+
+
+//	float noise_level = 0.1;
+//	cVectorRobotToMessage += m_pcRNG->Gaussian(0,noise_level);
+//	tGroundReads[1].Value += m_pcRNG->Gaussian(0,noise_level);
+//	tGroundReads[2].Value += m_pcRNG->Gaussian(0,noise_level);
+//	tGroundReads[3].Value += m_pcRNG->Gaussian(0,noise_level);
+
 
 	if (Abs(tGroundReads[0].Value) < 0.05f || Abs(tGroundReads[1].Value) < 0.05f
 			|| Abs(tGroundReads[2].Value) < 0.05f
@@ -444,6 +484,12 @@ int CFootBotAggregation::CheckSpot() {
 	}
 
 }
+
+
+
+
+
+
 
 int CFootBotAggregation::InformedRobot(int spot) {
 	int infSpot = informedSpot;

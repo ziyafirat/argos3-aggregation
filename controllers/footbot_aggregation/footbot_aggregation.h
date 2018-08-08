@@ -15,9 +15,12 @@
 /* Definition of the range and bearing sensor */
 #include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h>
 /* Definition of the foot-bot motor ground sensor */
-#include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h>
+//#include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h>
 /* Definitions for random number generation */
 #include <argos3/core/utility/math/rng.h>
+
+#include <argos3/plugins/robots/foot-bot/simulator/footbot_motor_ground_rotzonly_sensor.h>
+
 
 #include <iostream>
 #include <string>
@@ -141,7 +144,9 @@ protected:
 	CCI_RangeAndBearingSensor* m_pcRABS;
 
 	/* Pointer to the foot-bot motor ground sensor */
-	CCI_FootBotMotorGroundSensor* m_pcGround;
+	//CCI_FootBotMotorGroundSensor* m_pcGround;
+	/* Pointer to the foot-bot motor ground sensor */
+	CFootBotMotorGroundRotZOnlySensor* m_pcGroundZ;
 
 	int counter;
 	int numOfTimeStepTurning;
@@ -196,7 +201,7 @@ protected:
 	int waitBlackPoint;
 	int obstacleFlag;
 	unsigned int goStraight, walkInsideSpot, leaveInsideSpot, waitInsideSpot,
-	informedSpot, numInformedRobot;
+			informedSpot, numInformedRobot;
 
 	/* Angle tolerance range to go straight.
 	 * It is set to [-alpha,alpha]. */

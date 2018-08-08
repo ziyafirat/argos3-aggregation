@@ -19,6 +19,7 @@ controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggre
  /usr/local/include/argos3/core/simulator/medium/medium.h
  /usr/local/include/argos3/core/simulator/physics_engine/physics_engine.h
  /usr/local/include/argos3/core/simulator/physics_engine/physics_model.h
+ /usr/local/include/argos3/core/simulator/sensor.h
  /usr/local/include/argos3/core/simulator/space/positional_indices/grid.h
  /usr/local/include/argos3/core/simulator/space/positional_indices/grid_impl.h
  /usr/local/include/argos3/core/simulator/space/positional_indices/positional_index.h
@@ -53,6 +54,7 @@ controllers/footbot_aggregation/CMakeFiles/footbot_aggregation.dir/footbot_aggre
  /usr/local/include/argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h
  /usr/local/include/argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h
  /usr/local/include/argos3/plugins/robots/foot-bot/simulator/footbot_entity.h
+ /usr/local/include/argos3/plugins/robots/foot-bot/simulator/footbot_motor_ground_rotzonly_sensor.h
  /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h
  /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h
  /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h

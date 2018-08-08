@@ -99,7 +99,9 @@ private:   /**
    
    Real m_fRadius;
    CVector2 m_cCoordBlackSpot;
+   CVector2 m_cCoordBlackSpot2;
    CVector2 m_cCoordWhiteSpot;
+   CVector2 m_cCoordWhiteSpot2;
    unsigned int minDist;
    unsigned int timeStopCond;
 

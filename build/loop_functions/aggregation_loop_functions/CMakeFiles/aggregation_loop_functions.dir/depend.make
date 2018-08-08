@@ -21,6 +21,7 @@ loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/medium/medium.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/physics_engine/physics_engine.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/physics_engine/physics_model.h
+loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/sensor.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/simulator.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/space/positional_indices/grid.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/core/simulator/space/positional_indices/grid_impl.h
@@ -57,6 +58,7 @@ loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/control_interface/ci_footbot_motor_ground_sensor.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/simulator/footbot_entity.h
+loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/foot-bot/simulator/footbot_motor_ground_rotzonly_sensor.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h
 loop_functions/aggregation_loop_functions/CMakeFiles/aggregation_loop_functions.dir/aggregation.cpp.o: /usr/local/include/argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h
