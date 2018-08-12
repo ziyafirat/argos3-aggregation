@@ -427,55 +427,29 @@ void CFootBotAggregation::MoveStep() {
 
 int CFootBotAggregation::CheckSpot() {
 
-	CVector3 cVectorRobotToMessage;
+//	const CCI_RangeAndBearingSensor::TReadings& tPackets =
+//				m_pcRABS->GetReadings();
 	/* Read stuff from the ground sensor */
-	const CFootBotMotorGroundRotZOnlySensor::TReadings& tGroundReads =
+	CFootBotMotorGroundRotZOnlySensor::TReadings tGroundReads =
 			m_pcGroundZ->GetReadings();
-	const CCI_RangeAndBearingSensor::TReadings& tPackets =
-			m_pcRABS->GetReadings();
 
 
-	//m_pcGroundZ->Update();
+	float noise_level = 0.05;
+	tGroundReads[0].Value += m_pcRNG->Gaussian(0, noise_level);
+	tGroundReads[1].Value += m_pcRNG->Gaussian(0, noise_level);
+	tGroundReads[2].Value += m_pcRNG->Gaussian(0, noise_level);
+	tGroundReads[3].Value += m_pcRNG->Gaussian(0, noise_level);
 
-//	if (spotOut == "inside") {
-//		if (Abs(tGroundReads[0].Value) > 0.05f
-//				|| Abs(tGroundReads[1].Value) > 0.05f
-//				|| Abs(tGroundReads[2].Value) > 0.05f
-//				|| Abs(tGroundReads[3].Value) > 0.05f) {
-//
-//			return InformedRobot(1);
-//
-//		} else if (Abs(tGroundReads[0].Value - 1.0f) > 0.05f
-//				|| Abs(tGroundReads[1].Value - 1.0f) > 0.05f
-//				|| Abs(tGroundReads[2].Value - 1.0f) > 0.05f
-//				|| Abs(tGroundReads[3].Value - 1.0f) > 0.05f) {
-//
-//			return InformedRobot(0);
-//		}
-//	}
-
-
-
-
-
-
-//	float noise_level = 0.1;
-//	cVectorRobotToMessage += m_pcRNG->Gaussian(0,noise_level);
-//	tGroundReads[1].Value += m_pcRNG->Gaussian(0,noise_level);
-//	tGroundReads[2].Value += m_pcRNG->Gaussian(0,noise_level);
-//	tGroundReads[3].Value += m_pcRNG->Gaussian(0,noise_level);
-
-
-	if (Abs(tGroundReads[0].Value) < 0.05f || Abs(tGroundReads[1].Value) < 0.05f
-			|| Abs(tGroundReads[2].Value) < 0.05f
-			|| Abs(tGroundReads[3].Value) < 0.05f) {
+	if (Abs(tGroundReads[0].Value) < 0.09f || Abs(tGroundReads[1].Value) < 0.09f
+			|| Abs(tGroundReads[2].Value) < 0.09f
+			|| Abs(tGroundReads[3].Value) < 0.09f) {
 
 		return InformedRobot(1);
 
-	} else if (Abs(tGroundReads[0].Value - 1.0f) < 0.05f
-			|| Abs(tGroundReads[1].Value - 1.0f) < 0.05f
-			|| Abs(tGroundReads[2].Value - 1.0f) < 0.05f
-			|| Abs(tGroundReads[3].Value - 1.0f) < 0.05f) {
+	} else if (Abs(tGroundReads[0].Value - 1.0f) < 0.09f
+			|| Abs(tGroundReads[1].Value - 1.0f) < 0.09f
+			|| Abs(tGroundReads[2].Value - 1.0f) < 0.09f
+			|| Abs(tGroundReads[3].Value - 1.0f) < 0.09f) {
 
 		return InformedRobot(0);
 
@@ -484,12 +458,6 @@ int CFootBotAggregation::CheckSpot() {
 	}
 
 }
-
-
-
-
-
-
 
 int CFootBotAggregation::InformedRobot(int spot) {
 	int infSpot = informedSpot;

@@ -344,6 +344,13 @@ void CAggregation::PostStep() {
 
 				}
 
+				Real fDistanceSpotWhite2 = (m_cCoordWhiteSpot2
+						- cFootbotPosition).Length();
+				if (fDistanceSpotWhite2 <= m_fRadius) {
+					whiteSpotCount += 1;
+
+				}
+
 				if (fDistanceSpotBlack > m_fRadius
 						&& fDistanceSpotWhite > m_fRadius) {
 					outsideSpotCount += 1;
@@ -359,8 +366,10 @@ void CAggregation::PostStep() {
 //				words.insert(lexi[i]);
 //
 		}
+
 		m_cOutFile << clock << "	" << blackSpotCount / cFBMap.size() << "	"
 				<< whiteSpotCount / cFBMap.size() << endl;
+
 
 //		m_cOutFile << " \t    TimeStep: " << clock
 //				<< "     BlackSpot: " << blackSpotCount
