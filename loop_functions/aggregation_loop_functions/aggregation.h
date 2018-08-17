@@ -107,6 +107,9 @@ private:   /**
 
    Real blackSpotCount;
    Real whiteSpotCount;
+   Real whiteSpotCount1;
+   Real whiteSpotCount2;
+   Real whiteSpotCount3;
    Real outsideSpotCount;
    Real blackSpotVector;
    Real whiteSpotVector;
