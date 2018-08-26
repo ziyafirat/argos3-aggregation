@@ -20,7 +20,7 @@ static const Real BOT_RADIUS = 0.14f;
 CAggregation::CAggregation() :
 		timeStopCond(), m_fRadius(), minDist(), m_fMinObjectY(), m_fMaxObjectY(), outsideSpotCount(
 				0), whiteSpotCount(0), whiteSpotCount1(0), whiteSpotCount2(0), whiteSpotCount3(
-				0), blackSpotCount(0), blackSpotVector(), whiteSpotVector() {
+				0),whiteSpotCount4(0), blackSpotCount(0), blackSpotVector(), whiteSpotVector() {
 }
 
 /****************************************/
@@ -67,6 +67,7 @@ void CAggregation::Init(TConfigurationNode& t_tree) {
 	whiteSpotCount1 = 0;
 	whiteSpotCount2 = 0;
 	whiteSpotCount3 = 0;
+	whiteSpotCount4 = 0;
 	outsideSpotCount = 0;
 
 	/* Open the file for text writing */
@@ -318,6 +319,7 @@ void CAggregation::PostStep() {
 		whiteSpotCount1 = 0;
 		whiteSpotCount2 = 0;
 		whiteSpotCount3 = 0;
+		whiteSpotCount4 = 0;
 		outsideSpotCount = 0;
 		for (CSpace::TMapPerType::iterator it = cFBMap.begin();
 				it != cFBMap.end(); ++it) {
@@ -342,13 +344,13 @@ void CAggregation::PostStep() {
 						(m_cCoordBlackSpot - cFootbotPosition).Length();
 				if (fDistanceSpotBlack <= m_fRadius) {
 					blackSpotCount += 1;
-
+					whiteSpotCount4 += 1;
 				}
 
 				Real fDistanceSpotBlack2 = (m_cCoordBlackSpot2
 						- cFootbotPosition).Length();
 				if (fDistanceSpotBlack2 <= m_fRadius) {
-					whiteSpotCount += 1;
+					blackSpotCount += 1;
 					whiteSpotCount3 += 1;
 
 				}
@@ -393,7 +395,8 @@ void CAggregation::PostStep() {
 				<< whiteSpotCount / cFBMap.size() << "	"
 				<< whiteSpotCount1 / cFBMap.size() << "	"
 				<< whiteSpotCount2 / cFBMap.size() << "	"
-				<< whiteSpotCount3 / cFBMap.size() << endl;
+				<< whiteSpotCount3 / cFBMap.size() << "	"
+				<< whiteSpotCount4 / cFBMap.size() << endl;
 
 //		m_cOutFile << " \t    TimeStep: " << clock
 //				<< "     BlackSpot: " << blackSpotCount
@@ -487,7 +490,7 @@ argos::CColor CAggregation::GetFloorColor(
 	}
 	d = (m_cCoordBlackSpot2 - vCurrentPoint).Length();
 	if (d <= m_fRadius) {
-		return CColor::WHITE;
+		return CColor::BLACK;
 	}
 	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
 	if (d <= m_fRadius) {
