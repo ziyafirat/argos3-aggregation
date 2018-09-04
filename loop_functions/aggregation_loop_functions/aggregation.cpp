@@ -45,8 +45,8 @@ void CAggregation::Init(TConfigurationNode& t_tree) {
 			timeStopCond);
 
 //2 spots
-//	m_cCoordBlackSpot = CVector2(-blackSpotVector, 0);
-//	m_cCoordWhiteSpot = CVector2(whiteSpotVector, 0);
+	m_cCoordBlackSpot = CVector2(-blackSpotVector, 0);
+	m_cCoordWhiteSpot = CVector2(whiteSpotVector, 0);
 
 //	m_fRadius = 0.6;
 
@@ -56,10 +56,10 @@ void CAggregation::Init(TConfigurationNode& t_tree) {
 //	m_cCoordWhiteSpot2 = CVector2(whiteSpotVector, -whiteSpotVector);
 
 //4 spots
-	m_cCoordBlackSpot = CVector2(-blackSpotVector, blackSpotVector);
-	m_cCoordBlackSpot2 = CVector2(-blackSpotVector, -blackSpotVector);
-	m_cCoordWhiteSpot = CVector2(whiteSpotVector, whiteSpotVector);
-	m_cCoordWhiteSpot2 = CVector2(whiteSpotVector, -whiteSpotVector);
+//	m_cCoordBlackSpot = CVector2(-blackSpotVector, blackSpotVector);
+//	m_cCoordBlackSpot2 = CVector2(-blackSpotVector, -blackSpotVector);
+//	m_cCoordWhiteSpot = CVector2(whiteSpotVector, whiteSpotVector);
+//	m_cCoordWhiteSpot2 = CVector2(whiteSpotVector, -whiteSpotVector);
 
 
 	blackSpotCount = 0;
@@ -347,13 +347,13 @@ void CAggregation::PostStep() {
 					whiteSpotCount4 += 1;
 				}
 
-				Real fDistanceSpotBlack2 = (m_cCoordBlackSpot2
-						- cFootbotPosition).Length();
-				if (fDistanceSpotBlack2 <= m_fRadius) {
-					blackSpotCount += 1;
-					whiteSpotCount3 += 1;
-
-				}
+//				Real fDistanceSpotBlack2 = (m_cCoordBlackSpot2
+//						- cFootbotPosition).Length();
+//				if (fDistanceSpotBlack2 <= m_fRadius) {
+//					blackSpotCount += 1;
+//					whiteSpotCount3 += 1;
+//
+//				}
 
 				Real fDistanceSpotWhite =
 						(m_cCoordWhiteSpot - cFootbotPosition).Length();
@@ -363,13 +363,13 @@ void CAggregation::PostStep() {
 
 				}
 
-				Real fDistanceSpotWhite2 = (m_cCoordWhiteSpot2
-						- cFootbotPosition).Length();
-				if (fDistanceSpotWhite2 <= m_fRadius) {
-					whiteSpotCount += 1;
-					whiteSpotCount2 += 1;
-
-				}
+//				Real fDistanceSpotWhite2 = (m_cCoordWhiteSpot2
+//						- cFootbotPosition).Length();
+//				if (fDistanceSpotWhite2 <= m_fRadius) {
+//					whiteSpotCount += 1;
+//					whiteSpotCount2 += 1;
+//
+//				}
 
 				if (fDistanceSpotBlack > m_fRadius
 						&& fDistanceSpotWhite > m_fRadius) {
@@ -393,10 +393,11 @@ void CAggregation::PostStep() {
 
 		m_cOutFile << clock << "	" << blackSpotCount / cFBMap.size() << "	"
 				<< whiteSpotCount / cFBMap.size() << "	"
-				<< whiteSpotCount1 / cFBMap.size() << "	"
-				<< whiteSpotCount2 / cFBMap.size() << "	"
-				<< whiteSpotCount3 / cFBMap.size() << "	"
-				<< whiteSpotCount4 / cFBMap.size() << endl;
+//				<< whiteSpotCount1 / cFBMap.size() << "	"
+//				<< whiteSpotCount2 / cFBMap.size() << "	"
+//				<< whiteSpotCount3 / cFBMap.size() << "	"
+//				<< whiteSpotCount4 / cFBMap.size()
+				<< endl;
 
 //		m_cOutFile << " \t    TimeStep: " << clock
 //				<< "     BlackSpot: " << blackSpotCount
@@ -450,16 +451,16 @@ argos::CColor CAggregation::GetFloorColor(
 		const argos::CVector2& c_position_on_plane) {
 
 //2 spots
-//	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
-//			c_position_on_plane.GetY());
-//	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
-//	if (d <= m_fRadius) {
-//		return CColor::BLACK;
-//	}
-//	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
-//	if (d <= m_fRadius) {
-//		return CColor::WHITE;
-//	}
+	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
+			c_position_on_plane.GetY());
+	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
+	if (d <= m_fRadius) {
+		return CColor::BLACK;
+	}
+	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
+	if (d <= m_fRadius) {
+		return CColor::WHITE;
+	}
 //
 //	return CColor::GRAY50;
 
@@ -481,25 +482,25 @@ argos::CColor CAggregation::GetFloorColor(
 //
 //	return CColor::GRAY50;
 
-// 4 spots
-	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
-			c_position_on_plane.GetY());
-	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
-	if (d <= m_fRadius) {
-		return CColor::BLACK;
-	}
-	d = (m_cCoordBlackSpot2 - vCurrentPoint).Length();
-	if (d <= m_fRadius) {
-		return CColor::BLACK;
-	}
-	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
-	if (d <= m_fRadius) {
-		return CColor::WHITE;
-	}
-	d = (vCurrentPoint - m_cCoordWhiteSpot2).Length();
-	if (d <= (m_fRadius)) {
-		return CColor::WHITE;
-	}
+//// 4 spots
+//	CVector2 vCurrentPoint(c_position_on_plane.GetX(),
+//			c_position_on_plane.GetY());
+//	Real d = (m_cCoordBlackSpot - vCurrentPoint).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::BLACK;
+//	}
+//	d = (m_cCoordBlackSpot2 - vCurrentPoint).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::BLACK;
+//	}
+//	d = (vCurrentPoint - m_cCoordWhiteSpot).Length();
+//	if (d <= m_fRadius) {
+//		return CColor::WHITE;
+//	}
+//	d = (vCurrentPoint - m_cCoordWhiteSpot2).Length();
+//	if (d <= (m_fRadius)) {
+//		return CColor::WHITE;
+//	}
 
 	return CColor::GRAY50;
 }
