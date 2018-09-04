@@ -114,5 +114,6 @@ private:   /**
    Real outsideSpotCount;
    Real blackSpotVector;
    Real whiteSpotVector;
+   int totalSpots;
 
 };
