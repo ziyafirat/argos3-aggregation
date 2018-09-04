@@ -349,7 +349,7 @@ void CAggregation::PostStep() {
 					blackSpotCount += 1;
 					whiteSpotCount4 += 1;
 				}
-
+//as
 				Real fDistanceSpotBlack2 = (m_cCoordBlackSpot2
 						- cFootbotPosition).Length();
 				if (fDistanceSpotBlack2 <= m_fRadius && totalSpots>=4) {
