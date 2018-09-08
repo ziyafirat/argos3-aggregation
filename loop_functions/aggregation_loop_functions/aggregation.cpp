@@ -401,6 +401,7 @@ void CAggregation::PostStep() {
 				<< whiteSpotCount3 / cFBMap.size() << "	"
 				<< whiteSpotCount4 / cFBMap.size() << endl;
 
+
 //		m_cOutFile << " \t    TimeStep: " << clock
 //				<< "     BlackSpot: " << blackSpotCount
 //				<< "     WhiteSpot: " << whiteSpotCount
