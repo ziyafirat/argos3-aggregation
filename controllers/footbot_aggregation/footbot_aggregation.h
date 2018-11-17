@@ -148,6 +148,8 @@ protected:
 	/* Pointer to the foot-bot motor ground sensor */
 	CFootBotMotorGroundRotZOnlySensor* m_pcGroundZ;
 
+	int maxNeighborsSeen;
+	int countMaxNeighbors;
 	int counter;
 	int numOfTimeStepTurning;
 	int left;

@@ -22,7 +22,7 @@
 
 CFootBotAggregation::CFootBotAggregation() :
 		m_pcWheels(NULL), m_pcProximity(NULL), m_cAlpha(90.0f), m_fDelta(0.5f), m_fWheelVelocity(
-				2.5f), minDist(100), a(0.14f), b(0), numOfTimeStepTurning(0), counter(
+				2.5f), minDist(100), a(0.14f), b(0), numOfTimeStepTurning(0), maxNeighborsSeen(0),countMaxNeighbors(0),counter(
 				0), left(0), right(0), goStraight(50), obstacleFlag(0), rho(
 				0.5), blackSpotCounter(0), goBlackPoint(0), waitBlackPoint(0), differentialDrive(
 				18), walkInsideSpot(150), leaveInsideSpot(800), currentWord(0), waitInsideSpot(
@@ -111,6 +111,7 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 	GetNodeAttribute(t_node, "waitInsideSpot", waitInsideSpot);
 	GetNodeAttribute(t_node, "informedSpot", informedSpot);
 	GetNodeAttribute(t_node, "numInformedRobot", numInformedRobot);
+	GetNodeAttribute(t_node, "countMaxNeighbors", countMaxNeighbors);
 
 	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 			m_pcRABS->GetReadings();
@@ -433,7 +434,6 @@ int CFootBotAggregation::CheckSpot() {
 	CFootBotMotorGroundRotZOnlySensor::TReadings tGroundReads =
 			m_pcGroundZ->GetReadings();
 
-
 	float noise_level = 0.05;
 	tGroundReads[0].Value += m_pcRNG->Gaussian(0, noise_level);
 	tGroundReads[1].Value += m_pcRNG->Gaussian(0, noise_level);
@@ -523,19 +523,28 @@ unsigned int CFootBotAggregation::CountNeighbours() {
 			m_pcRABS->GetReadings();
 	unsigned int counter = 1;
 	for (size_t i = 0; i < tPackets.size(); ++i) {
-		if (tPackets[i].Range < minDist and tPackets[i].Data[0] == STATE_STAY) {
-			//hear(tPackets[i].Data[0]);
+		if (tPackets[i].Range < minDist ) {
+			if (probaRule!=4 and tPackets[i].Data[0] == STATE_STAY) {
+				//hear(tPackets[i].Data[0]);
+				++counter;
+			}
+			else{
+				++counter;
 
-			++counter;
+			}
+
 		}
 	}
+	if(counter > maxNeighborsSeen){
+		maxNeighborsSeen = counter;
+	}
+	LOGERR << "Max neighbors " << maxNeighborsSeen << std::endl;
 
 	return counter;
 }
 
 float CFootBotAggregation::ComputeProba(unsigned int n) {
 	switch (probaRule) {
-	case 1: //linear
 		return n * a;
 		break;
 	case 2: //functions
@@ -543,13 +552,42 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 		switch (stateStep) {
 		case STATE_WALK: //P_join
 
-			//return 0.05 + 0.45 * (1 - exp(-a * n));
+			//return 1-(1/208);
+			//return 1;
+			//////return 0.05 + 0.45 * (1 - exp(-a * n));
+
 			return 0.03 + 0.48 * (1 - exp(-a * n));
 			break;
 		case STATE_STAY: //1-P_leave
-			//return 1 - 0.75 * exp(-b * n);
-			//return 1-exp(-b*n);
+			/////return 1 - 0.75 * exp(-b * n);
+			/////return 1-exp(-b*n);
+
+			//return 0.001 / (1+1667 * (n/208)*(n/208));
+			//return 1 / (1+600 * (n/3)*(n/3));
+
+			long double ser= exp(-b * n);
+			//LOGERR << "countMaxNeighbors:" << countMaxNeighbors << " prob:" << ser << std::endl;
 			return exp(-b * n);
+			break;
+		}
+		break;
+	case 4: //campo
+		--n;
+		switch (stateStep) {
+		case STATE_WALK: //P_join
+
+			return 1;
+
+			break;
+		case STATE_STAY: //1-P_leave
+			double theta  =0.01;
+			double rho = 1667.0;
+			int S_local = countMaxNeighbors;
+//			long double ress= theta / (1 + rho * (n / S_local) * (n / S_local));
+//			LOGERR << "countMaxNeighbors:" << countMaxNeighbors << " prob:" << ress << std::endl;
+			return theta / (1 + rho * (n / S_local) * (n / S_local));
+
+
 			break;
 		}
 		break;
@@ -568,6 +606,7 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 			break;
 		}
 		break;
+
 	}
 	return 0;
 }

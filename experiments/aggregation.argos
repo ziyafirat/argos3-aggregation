@@ -33,8 +33,8 @@
    	<footbot_motor_ground implementation="rot_z_only" noise_level="0" />
       </sensors>
       <params 
-	goStraight="1500" walkInsideSpot="500" waitInsideSpot="1" leaveInsideSpot="800"
- minDist="400" aParam="2.6" bParam="2.2" leaveTurns="1" stayTurns="1" walkTurns="1" rule="2" informedSpot="0" numInformedRobot="10" />
+	goStraight="1500" walkInsideSpot="500" waitInsideSpot="10" countMaxNeighbors="6" leaveInsideSpot="800"
+ minDist="400" aParam="2.6" bParam="2.2" leaveTurns="1" stayTurns="1" walkTurns="1" rule="4" informedSpot="0" numInformedRobot="10" />
     </footbot_aggregation_controller>
 
   </controllers>
@@ -86,7 +86,7 @@
 
   <!-- ****************** -->
   <!-- * Visualization * -->
-  <!-- ******************  
+  <!-- ******************     
    <visualization>      
     <qt-opengl lua_editor="false">
       <user_functions library="../build/loop_functions/word_loop_functions/libword_loop_functions"
@@ -98,6 +98,6 @@
       </camera>
     </qt-opengl>
 
-  </visualization>    --> 
+  </visualization> --> 
 
 </argos-configuration>
