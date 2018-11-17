@@ -538,7 +538,7 @@ unsigned int CFootBotAggregation::CountNeighbours() {
 	if(counter > maxNeighborsSeen){
 		maxNeighborsSeen = counter;
 	}
-	LOGERR << "Max neighbors " << maxNeighborsSeen << std::endl;
+	//LOGERR << "Max neighbors " << maxNeighborsSeen << std::endl;
 
 	return counter;
 }
