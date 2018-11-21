@@ -575,16 +575,16 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 		--n;
 		switch (stateStep) {
 		case STATE_WALK: //P_join
-
+//			double Miu=0.001;
+//			double S_localJ = countMaxNeighbors;
+			//return 0.001 * (1-(n / countMaxNeighbors));
 			return 1;
 
 			break;
 		case STATE_STAY: //1-P_leave
-			double theta  =1.0;
-			double rho = 600.0;
+			double theta  =0.01;
+			double rho = 1667.0;
 			double S_local = countMaxNeighbors;
-//			long double ress= theta / (1 + rho * (n / S_local) * (n / S_local));
-//			LOGERR << "countMaxNeighbors:" << countMaxNeighbors << " prob:" << ress << std::endl;
 			return theta / (1 + rho * (n / S_local) * (n / S_local));
 
 
