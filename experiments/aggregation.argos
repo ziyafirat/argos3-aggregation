@@ -78,7 +78,7 @@
   </physics_engines>
 
   <!-- ********* -->
-  <!-- * Media * -->
+  <!-- * Media * --> 
   <!-- ********* -->
   <media>
     <range_and_bearing id="rab" index="grid" grid_size="1,1,1" />
