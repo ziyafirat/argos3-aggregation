@@ -28,7 +28,8 @@ CFootBotAggregation::CFootBotAggregation() :
 				0), waitBlackPoint(0), differentialDrive(18), walkInsideSpot(
 				150), leaveInsideSpot(800), currentWord(0), waitInsideSpot(200), m_fStayTurns(
 				50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(""), robotNum(
-				0), numInformedRobot(10), informedSpot(0), exploratoryFlag(0), m_pcRABA(
+				0), numInformedRobot(10), numInformedRobotBlack(10), numInformedRobotWhite(
+				10), informedSpot(0), exploratoryFlag(0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGroundZ(NULL), state(0), stateStep(0), avoidTurns(
 				0), stayTurns(0), leaveTurns(0), walkTurns(1), spotTurns(0), spotFlag(
@@ -111,6 +112,8 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 	GetNodeAttribute(t_node, "waitInsideSpot", waitInsideSpot);
 	GetNodeAttribute(t_node, "informedSpot", informedSpot);
 	GetNodeAttribute(t_node, "numInformedRobot", numInformedRobot);
+	GetNodeAttribute(t_node, "numInformedRobotBlack", numInformedRobotBlack);
+	GetNodeAttribute(t_node, "numInformedRobotWhite", numInformedRobotWhite);
 	GetNodeAttribute(t_node, "countMaxNeighbors", countMaxNeighbors);
 
 	const CCI_RangeAndBearingSensor::TReadings& tPackets =
@@ -461,24 +464,45 @@ int CFootBotAggregation::CheckSpot() {
 
 int CFootBotAggregation::InformedRobot(int spot) {
 	int infSpot = informedSpot;
+	int value = atoi(GetId().c_str());
 	if (infSpot == spot) {
-		int value = atoi(GetId().c_str());
-		if (value < numInformedRobot) {
+		if (value >= numInformedRobotWhite && value < numInformedRobot) {
+			LOGERR << "white " << value << std::endl;
 			return STATE_LEAVE;
 		} else {
-//			if (spotOut == "inside") {
-//				spotOut = "WaitInside";
-//			}
 			return STATE_STAY;
 		}
-	} else {
-//		if (spotOut == "inside") {
-//			spotOut = "WaitInside";
-//		}
 
-		return STATE_STAY;
+	} else {
+		if (value < numInformedRobotWhite) {
+			LOGERR << "black " << value << std::endl;
+			return STATE_LEAVE;
+		} else {
+			return STATE_STAY;
+		}
 	}
 }
+
+//int CFootBotAggregation::InformedRobot(int spot) {
+//	int infSpot = informedSpot;
+//	if (infSpot == spot) {
+//		int value = atoi(GetId().c_str());
+//		if (value < numInformedRobot) {
+//			return STATE_LEAVE;
+//		} else {
+////			if (spotOut == "inside") {
+////				spotOut = "WaitInside";
+////			}
+//			return STATE_STAY;
+//		}
+//	} else {
+////		if (spotOut == "inside") {
+////			spotOut = "WaitInside";
+////		}
+//
+//		return STATE_STAY;
+//	}
+//}
 
 /****************************************/
 /****************************************/
@@ -575,7 +599,7 @@ case 4: //campo
 	switch (stateStep) {
 	case STATE_WALK: //P_join
 //			double Miu=0.001;
-		//double sss = countMaxNeighbors;
+	//double sss = countMaxNeighbors;
 		return 0.001 * (1 - n / countMaxNeighbors);
 		//return 1;
 
