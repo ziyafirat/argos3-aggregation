@@ -467,7 +467,7 @@ int CFootBotAggregation::InformedRobot(int spot) {
 	int value = atoi(GetId().c_str());
 	if (infSpot == spot) {
 		if (value >= numInformedRobotWhite && value < numInformedRobot) {
-			LOGERR << "white " << value << std::endl;
+			//LOGERR << "white " << value << std::endl;
 			return STATE_LEAVE;
 		} else {
 			return STATE_STAY;
@@ -475,7 +475,7 @@ int CFootBotAggregation::InformedRobot(int spot) {
 
 	} else {
 		if (value < numInformedRobotWhite) {
-			LOGERR << "black " << value << std::endl;
+			//LOGERR << "black " << value << std::endl;
 			return STATE_LEAVE;
 		} else {
 			return STATE_STAY;
