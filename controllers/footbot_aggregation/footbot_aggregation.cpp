@@ -463,19 +463,19 @@ int CFootBotAggregation::CheckSpot() {
 }
 
 int CFootBotAggregation::InformedRobot(int spot) {
-	int infSpot = informedSpot;
+	//informedSpot = 0:white-  1:black
+	int avoidSpot = informedSpot;
 	int value = atoi(GetId().c_str());
-	if (infSpot == spot) {
+	if (avoidSpot == spot) {
 		if (value >= numInformedRobotWhite && value < numInformedRobot) {
-			//LOGERR << "white " << value << std::endl;
+			//LOGERR << "avoid white " << value << std::endl;
 			return STATE_LEAVE;
 		} else {
 			return STATE_STAY;
 		}
-
 	} else {
 		if (value < numInformedRobotWhite) {
-			//LOGERR << "black " << value << std::endl;
+			//LOGERR << "avoid black " << value << std::endl;
 			return STATE_LEAVE;
 		} else {
 			return STATE_STAY;
@@ -588,7 +588,7 @@ case 2: //functions
 		//return 0.001 / (1+1667 * (n/208)*(n/208));
 		//return 1 / (1+600 * (n/3)*(n/3));
 
-		long double ser = exp(-b * n);
+		//long double ser = exp(-b * n);
 		//LOGERR << "countMaxNeighbors:" << countMaxNeighbors << " prob:" << ser << std::endl;
 		return exp(-b * n);
 		break;
