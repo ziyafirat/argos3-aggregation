@@ -568,66 +568,67 @@ unsigned int CFootBotAggregation::CountNeighbours() {
 
 float CFootBotAggregation::ComputeProba(unsigned int n) {
 	switch (probaRule) {
-	return n * a;
-	break;
-case 2: //functions
-	--n;
-	switch (stateStep) {
-	case STATE_WALK: //P_join
-
-		//return 1-(1/208);
-		//return 1;
-		//////return 0.05 + 0.45 * (1 - exp(-a * n));
-
-		return 0.03 + 0.48 * (1 - exp(-a * n));
+	case 1: //linear
+		return n * a;
 		break;
-	case STATE_STAY: //1-P_leave
-		/////return 1 - 0.75 * exp(-b * n);
-		/////return 1-exp(-b*n);
+	case 2: //functions
+		--n;
+		switch (stateStep) {
+		case STATE_WALK: //P_join
 
-		//return 0.001 / (1+1667 * (n/208)*(n/208));
-		//return 1 / (1+600 * (n/3)*(n/3));
+			//return 1-(1/208);
+			//return 1;
+			//////return 0.05 + 0.45 * (1 - exp(-a * n));
 
-		//long double ser = exp(-b * n);
-		//LOGERR << "countMaxNeighbors:" << countMaxNeighbors << " prob:" << ser << std::endl;
-		return exp(-b * n);
+			return 0.03 + 0.48 * (1 - exp(-a * n));
+			break;
+		case STATE_STAY: //1-P_leave
+			/////return 1 - 0.75 * exp(-b * n);
+			/////return 1-exp(-b*n);
+
+			//return 0.001 / (1+1667 * (n/208)*(n/208));
+			//return 1 / (1+600 * (n/3)*(n/3));
+
+			//long double ser = exp(-b * n);
+			//LOGERR << "countMaxNeighbors:" << countMaxNeighbors << " prob:" << ser << std::endl;
+			return exp(-b * n);
+			break;
+		}
 		break;
-	}
-	break;
-case 4: //campo
-	--n;
-	switch (stateStep) {
-	case STATE_WALK: //P_join
+	case 4: //campo
+		--n;
+		switch (stateStep) {
+		case STATE_WALK: //P_join
 //			double Miu=0.001;
-	//double sss = countMaxNeighbors;
-		return 0.001 * (1 - n / countMaxNeighbors);
-		//return 1;
+		//double sss = countMaxNeighbors;
+			return 0.001 * (1 - n / countMaxNeighbors);
+			//return 1;
 
-		break;
-	case STATE_STAY: //1-P_leave
-		double theta = 0.01;
-		double rho = 1667.0;
-		double S_local = countMaxNeighbors;
-		return theta / (1 + rho * (n / S_local) * (n / S_local));
+			break;
+		case STATE_STAY: //1-P_leave
+			double theta = 0.01;
+			double rho = 1667.0;
+			double S_local = countMaxNeighbors;
+			return theta / (1 + rho * (n / S_local) * (n / S_local));
 
+			break;
+		}
 		break;
-	}
-	break;
-case 3: //correll and martinolli
-	--n; //don't count the bot itself
-	float pJoin[5] = { 0.03, 0.42, 0.5, 0.51, 0.51 };
-	float pLeave[5] = { 1, 0.02, 0.00236, 0.0014, 0.000766 };
-	if (n > 4)
-		n = 4;
-	switch (stateStep) {
-	case STATE_WALK:
-		return pJoin[n];
+	case 3: //correll and martinolli
+		--n; //don't count the bot itself
+		float pJoin[5] = { 0.03, 0.42, 0.5, 0.51, 0.51 };
+		float pLeave[5] = { 1, 0.02, 0.00236, 0.0014, 0.000766 };
+		if (n > 4)
+			n = 4;
+		switch (stateStep) {
+		case STATE_WALK:
+			return pJoin[n];
+			break;
+		case STATE_STAY:
+			return pLeave[n];
+			break;
+		}
 		break;
-	case STATE_STAY:
-		return pLeave[n];
-		break;
-	}
-	break;
 
 	}
 	return 0;
