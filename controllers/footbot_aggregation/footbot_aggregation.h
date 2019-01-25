@@ -156,7 +156,6 @@ protected:
 	int right;
 
 	int lastMove;
-
 	int avoidTurns;
 	int leaveTurns;
 	int stayTurns;
@@ -164,6 +163,7 @@ protected:
 	int spotTurns;
 	int spotFlag;
 	int exploratoryFlag;
+	int numOfNeighboursWhileJoining;
 	string spotOut;
 	unsigned short int state;
 
