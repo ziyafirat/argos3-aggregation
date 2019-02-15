@@ -587,7 +587,7 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 
 			float pLeaveNonInformed[8] = { 0.0, 0.0000002051, 0.0000167017, 0.0001507331, 0.0013603680, 0.0122773399, 0.1108031584, 1.0 }; // array for non informed return values
 			int value = atoi(GetId().c_str());       // get robot ID
-			if (value >= numInformedRobot && numInformedRobot>0) {         // if robot non informed robot and total informed > 0 use new method
+			//if (value >= numInformedRobot && numInformedRobot>0) {         // if robot non informed robot and total informed > 0 use new method
 
 				int X = numOfNeighboursWhileJoining; // numOfNeighboursWhileJoining is equal to X
 
@@ -609,9 +609,9 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 					return pLeaveNonInformed[7];
 				else								// X + or -  > 7 robots p(leave) -> 1.0000000000
 					return pLeaveNonInformed[7];
-			} else {
-				return exp(-b * n);
-			}
+			//} else {
+			//	return exp(-b * n);
+			//}
 			break;
 		}
 		break;
