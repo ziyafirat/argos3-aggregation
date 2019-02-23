@@ -21,7 +21,6 @@
 
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_motor_ground_rotzonly_sensor.h>
 
-
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -41,6 +40,18 @@ using namespace std;
  * A controller is simply an implementation of the CCI_Controller class.
  */
 class CFootBotAggregation: public CCI_Controller {
+
+private:
+
+	/**
+	 * The path of the output file.
+	 */
+	std::string m_strOutFile;
+
+	/**
+	 * The stream associated to the output file.
+	 */
+	std::ofstream m_cOutFile;
 
 public:
 
@@ -198,12 +209,15 @@ protected:
 	Real a, b;
 	unsigned int minDist, m_fStayTurns, m_fLeaveTurns, m_fWalkTurns;
 	int blackSpotCounter;
+	int clockCounter;
+	int spotInf;
 	//int goStraight;
 	int goBlackPoint;
 	int waitBlackPoint;
 	int obstacleFlag;
 	unsigned int goStraight, walkInsideSpot, leaveInsideSpot, waitInsideSpot,
-			informedSpot, numInformedRobot, numInformedRobotBlack,numInformedRobotWhite;
+			informedSpot, numInformedRobot, numInformedRobotBlack,
+			numInformedRobotWhite;
 
 	/* Angle tolerance range to go straight.
 	 * It is set to [-alpha,alpha]. */
