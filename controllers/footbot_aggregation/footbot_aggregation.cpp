@@ -675,7 +675,7 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 //					<< " numInfR:" << numInformedRobot << std::endl;
 
 			//if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
-			if (value >= numInformedRobot) { // if robot non informed robot
+			if (value >= numInformedRobot ) { // if robot non informed robot
 				Real Res1 = Exp(
 						-b * (6 - Abs(n - numOfNeighboursWhileJoining)));
 				Real one = 1.0f;
@@ -706,7 +706,7 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 							0.0013603680, 0.0122773399, 0.1108031584, 1.0 }; // array for non informed return values
 			int value = atoi(GetId().c_str());       // get robot ID
 
-			if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
+			if (value >= numInformedRobot) { // if robot non informed robot and total informed > 0 use new method
 
 				int X = numOfNeighboursWhileJoining; // numOfNeighboursWhileJoining is equal to X
 
