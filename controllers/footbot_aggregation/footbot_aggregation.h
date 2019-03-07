@@ -112,6 +112,7 @@ public:
 	virtual string GetStateStep();
 
 	//virtual string IntToString ( int number );
+	//virtual unsigned int CountSpotRobot();
 
 	virtual int LastMove();
 

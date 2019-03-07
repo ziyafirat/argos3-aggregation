@@ -21,7 +21,9 @@ iostream
 -
 string
 -
-sstream
+cstring
+-
+cerrno
 -
 
 /home/osboxes/Documents/argos3-aggregation/controllers/footbot_aggregation/footbot_aggregation.h

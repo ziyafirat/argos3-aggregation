@@ -9,7 +9,8 @@
 
 #include <iostream>
 #include <string>
-#include <sstream>
+#include <cstring>
+#include <cerrno>
 
 /* PI value definition */
 #define PI (3.141592653589793238462643383279502884L)
@@ -125,9 +126,10 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 //	m_cOutFile.open(m_strOutFile.c_str(),
 //			std::ofstream::in | std::ofstream::out | std::ofstream::app);
 //	if (m_cOutFile.fail()) {
-////			THROW_ARGOSEXCEPTION(
-////					"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
+//		THROW_ARGOSEXCEPTION(
+//				"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
 //	}
+
 //	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 //			m_pcRABS->GetReadings();
 //numInformedRobot = tPackets.size() * numInformedRobot/100;
@@ -160,23 +162,24 @@ void CFootBotAggregation::Reset() {
 	right = 0;
 	stateStep = 0;
 	exploratoryFlag = 0;
+	clockCounter=0;
 	lexicon.clear();
 	m_pcRABA->ClearData();
 	UpdateState(STATE_WALK);
 	/* Close the output file */
 //	m_cOutFile.close();
 //	if (m_cOutFile.fail()) {
-////			THROW_ARGOSEXCEPTION(
-////					"Error closing file \"" << m_strOutFile << "\": " << ::strerror(errno));
+//		THROW_ARGOSEXCEPTION(
+//				"Error closing file \"" << m_strOutFile << "\": " << ::strerror(errno));
 //	}
 //	/* Open the file for text writing */
 //
 //	m_cOutFile.open(m_strOutFile.c_str(),
 //			std::ofstream::in | std::ofstream::out | std::ofstream::app);
 //	if (m_cOutFile.fail()) {
-//			THROW_ARGOSEXCEPTION(
-//					"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
-	//}
+//		THROW_ARGOSEXCEPTION(
+//				"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
+//	}
 }
 
 /****************************************/
@@ -184,7 +187,9 @@ void CFootBotAggregation::Reset() {
 
 void CFootBotAggregation::ControlStep() {
 
+
 	if (!avoidTurns) {
+		clockCounter++;
 		switch (stateStep) {
 		case STATE_WALK:
 			WalkStep();
@@ -196,8 +201,10 @@ void CFootBotAggregation::ControlStep() {
 			LeaveStep();
 			break;
 		}
-	} else
+	} else{
 		--avoidTurns;
+		clockCounter++;
+	}
 }
 
 string CFootBotAggregation::GetStateStep() {
@@ -603,6 +610,41 @@ unsigned int CFootBotAggregation::CountNeighbours() {
 	return counter;
 }
 
+//unsigned int CFootBotAggregation::CountSpotRobot() {
+//	CFootBotEntity& footbotEntity = *any_cast<CFootBotEntity*>(
+//						it->second);
+//
+//	CFootBotAggregation& controller =
+//						static_cast<CFootBotAggregation&>(footbotEntity.GetControllableEntity().Get());
+//
+//
+//	unsigned int counter = 1;
+//
+//	if (state == "STAY") {
+//					Real Robot_X =
+//							footbotEntity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX();
+//					Real Robot_Y =
+//							footbotEntity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY();
+//					positions.push_back(make_pair(Robot_X, Robot_Y));
+//
+//	//			m_cOutFile << "    " << Robot_X << " \t         " << Robot_Y
+//	//					<< endl;
+//
+//					cFootbotPosition.Set(Robot_X, Robot_Y);
+//
+//
+//					Real fDistanceSpotBlack =
+//							(m_cCoordBlackSpot - cFootbotPosition).Length();
+//					if (fDistanceSpotBlack <= m_fRadius && totalSpots>=2) {
+//						blackSpotCount += 1;
+//						whiteSpotCount4 += 1;
+//					}
+//	}
+//	//LOGERR << "Max neighbors " << maxNeighborsSeen << std::endl;
+//
+//	return counter;
+//}
+
 float CFootBotAggregation::ComputeProba(unsigned int n) {
 
 	switch (probaRule) {
@@ -625,14 +667,15 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 			int value = atoi(GetId().c_str());       // get robot ID
 
 //			clockCounter++;
-//			m_cOutFile << clockCounter << "	" << n << "	" << spotInf << endl;
+			//0 is black and 1 is white.
+			//m_cOutFile << clockCounter << "	" << n << "	" << spotInf << endl;
 
 //			LOGERR << "clockCounter:" << clockCounter << "	neigh:" << n
 //					<< " spotInf:" << spotInf << " robot:" << GetId()
 //					<< " numInfR:" << numInformedRobot << std::endl;
 
-			if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
-
+			//if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
+			if (value >= numInformedRobot) { // if robot non informed robot
 				Real Res1 = Exp(
 						-b * (6 - Abs(n - numOfNeighboursWhileJoining)));
 				Real one = 1.0f;
@@ -745,6 +788,8 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 	}
 	return 0;
 }
+
+
 
 unsigned short int CFootBotAggregation::GetWord() {
 	unsigned short int w = 0; //means no convergence
