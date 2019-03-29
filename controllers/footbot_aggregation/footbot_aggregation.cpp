@@ -213,6 +213,7 @@ void CFootBotAggregation::ControlStep() {
 //						<< numOfNeighboursWhileJoining << "	"
 //						<< numOfNeighboursWhileOnSite<< "	"
 //						<< spotInfoSite<< endl;
+
 	}
 }
 

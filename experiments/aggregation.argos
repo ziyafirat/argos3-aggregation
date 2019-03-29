@@ -34,7 +34,7 @@
       </sensors>
       <params 
 	goStraight="1500" walkInsideSpot="500" waitInsideSpot="1" countMaxNeighbors="25.0" leaveInsideSpot="800"
- minDist="1000" aParam="2.6" bParam="0.7" kParam="10" leaveTurns="1" stayTurns="1" walkTurns="1" rule="5" informedSpot="0" numInformedRobot="10" numInformedRobotBlack="10" numInformedRobotWhite="10" output="result.txt" />
+ minDist="1000" aParam="2.6" bParam="0.7" kParam="14" leaveTurns="1" stayTurns="1" walkTurns="1" rule="5" informedSpot="0" numInformedRobot="10" numInformedRobotBlack="10" numInformedRobotWhite="10" output="result.txt" />
     </footbot_aggregation_controller>
 
   </controllers>
