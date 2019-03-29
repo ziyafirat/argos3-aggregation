@@ -32,6 +32,7 @@
 	<range_and_bearing implementation="medium" medium="rab" show_rays="false" range="1" />
    	<footbot_motor_ground implementation="rot_z_only" noise_level="0" />
       </sensors>
+      
       <params 
 	goStraight="1500" walkInsideSpot="500" waitInsideSpot="1" countMaxNeighbors="25.0" leaveInsideSpot="800"
  minDist="1000" aParam="2.6" bParam="0.7" kParam="14" leaveTurns="1" stayTurns="1" walkTurns="1" rule="5" informedSpot="0" numInformedRobot="10" numInformedRobotBlack="10" numInformedRobotWhite="10" output="result.txt" />

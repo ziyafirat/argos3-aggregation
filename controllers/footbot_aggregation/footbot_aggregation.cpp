@@ -143,6 +143,7 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 ////			m_pcRABA->SetData(1, 1);
 ////		}
 //	}
+
 	/* Create a random number generator. We use the 'argos' category so
 	 that creation, reset, seeding and cleanup are managed by ARGoS. */
 	m_pcRNG = CRandom::CreateRNG("argos");
