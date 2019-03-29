@@ -176,6 +176,8 @@ protected:
 	int spotFlag;
 	int exploratoryFlag;
 	int numOfNeighboursWhileJoining;
+	int numOfNeighboursWhileOnSite;
+	int spotInfoSite;
 	string spotOut;
 	unsigned short int state;
 
@@ -207,7 +209,7 @@ protected:
 	Real m_fWheelVelocity;
 
 	/* Base staying proba */
-	Real a, b;
+	Real a, b, k;
 	unsigned int minDist, m_fStayTurns, m_fLeaveTurns, m_fWalkTurns;
 	int blackSpotCounter;
 	int clockCounter;

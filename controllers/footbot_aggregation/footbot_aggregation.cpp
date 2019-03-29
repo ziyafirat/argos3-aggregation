@@ -23,15 +23,15 @@
 
 CFootBotAggregation::CFootBotAggregation() :
 		m_pcWheels(NULL), m_pcProximity(NULL), m_cAlpha(90.0f), m_fDelta(0.5f), m_fWheelVelocity(
-				2.5f), minDist(100), a(0.14f), b(0), numOfTimeStepTurning(0), maxNeighborsSeen(
+				2.5f), minDist(100), a(0.14f), b(0),k(15), numOfTimeStepTurning(0), maxNeighborsSeen(
 				0), countMaxNeighbors(0), counter(0), left(0), right(0), goStraight(
 				50), obstacleFlag(0), rho(0.5), blackSpotCounter(0), goBlackPoint(
 				0), waitBlackPoint(0), differentialDrive(18), walkInsideSpot(
 				150), leaveInsideSpot(800), currentWord(0), waitInsideSpot(200), m_fStayTurns(
 				50), m_fLeaveTurns(50), m_fWalkTurns(50), spotOut(""), robotNum(
 				0), numInformedRobot(10), numInformedRobotBlack(10), numInformedRobotWhite(
-				10), numOfNeighboursWhileJoining(-1), informedSpot(0), spotInf(
-				0), clockCounter(0), exploratoryFlag(0), m_pcRABA(
+				10), numOfNeighboursWhileJoining(-1),numOfNeighboursWhileOnSite(-1),spotInfoSite(-1), informedSpot(0), spotInf(
+				-1), clockCounter(0), exploratoryFlag(0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGroundZ(NULL), state(0), stateStep(0), avoidTurns(
 				0), stayTurns(0), leaveTurns(0), walkTurns(1), spotTurns(0), spotFlag(
@@ -105,6 +105,7 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 	GetNodeAttribute(t_node, "minDist", minDist);
 	GetNodeAttribute(t_node, "aParam", a);
 	GetNodeAttribute(t_node, "bParam", b);
+	GetNodeAttribute(t_node, "kParam", k);
 	GetNodeAttribute(t_node, "leaveTurns", m_fLeaveTurns);
 	GetNodeAttribute(t_node, "stayTurns", m_fStayTurns);
 	GetNodeAttribute(t_node, "walkTurns", m_fWalkTurns);
@@ -190,6 +191,10 @@ void CFootBotAggregation::ControlStep() {
 
 	if (!avoidTurns) {
 		clockCounter++;
+//		m_cOutFile << clockCounter << "	"
+//				<< numOfNeighboursWhileJoining << "	"
+//				<< numOfNeighboursWhileOnSite<< "	"
+//				<< spotInfoSite<< endl;
 		switch (stateStep) {
 		case STATE_WALK:
 			WalkStep();
@@ -204,6 +209,10 @@ void CFootBotAggregation::ControlStep() {
 	} else{
 		--avoidTurns;
 		clockCounter++;
+//		m_cOutFile << clockCounter << "	"
+//						<< numOfNeighboursWhileJoining << "	"
+//						<< numOfNeighboursWhileOnSite<< "	"
+//						<< spotInfoSite<< endl;
 	}
 }
 
@@ -377,6 +386,8 @@ void CFootBotAggregation::UpdateState(unsigned short int newState) {
 	case STATE_LEAVE:
 		spotFlag = 1;
 		numOfNeighboursWhileJoining = -1;
+		numOfNeighboursWhileOnSite=-1;
+		spotInfoSite=-1;
 		MoveStep();
 
 		break;
@@ -651,6 +662,7 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 	case 1: //linear
 		return n * a;
 		break;
+
 	case 5:   //functions sub prop new eq
 		--n;
 		switch (stateStep) {
@@ -658,12 +670,53 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 
 			if (numOfNeighboursWhileJoining < 0) { //while non informed robot join, calculate number of neighbors
 				numOfNeighboursWhileJoining = n;  // n is counted neighbors
-
+				numOfNeighboursWhileOnSite=n;
+				spotInfoSite=spotInf;
 			}
 			return 1;
 			break;
 		case STATE_STAY: //1-P_leave
 
+			numOfNeighboursWhileOnSite=n;
+			int value = atoi(GetId().c_str());       // get robot ID
+
+//			clockCounter++;
+			//0 is black and 1 is white.
+			//m_cOutFile << clockCounter << "	" << n << "	" << spotInf << endl;
+
+//			LOGERR << "clockCounter:" << clockCounter << "	neigh:" << n
+//					<< " spotInf:" << spotInf << " robot:" << GetId()
+//					<< " numInfR:" << numInformedRobot << std::endl;
+
+			//if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
+			//if (value >= numInformedRobot ) { // if robot non informed robot
+				Real Res1 = Exp(
+						-b * (15 - Abs(n - numOfNeighboursWhileJoining)));
+				Real one = 1.0f;
+
+				return Min(one, Res1);
+
+//			} else {
+//				return Exp(-b * n);
+//			}
+			break;
+		}
+		break;
+	case 7:   //functions sub prop new eq
+		--n;
+		switch (stateStep) {
+		case STATE_WALK: //P_join
+
+			if (numOfNeighboursWhileJoining < 0) { //while non informed robot join, calculate number of neighbors
+				numOfNeighboursWhileJoining = n;  // n is counted neighbors
+				numOfNeighboursWhileOnSite=n;
+				spotInfoSite=spotInf;
+			}
+			return 1;
+			break;
+		case STATE_STAY: //1-P_leave
+
+			numOfNeighboursWhileOnSite=n;
 			int value = atoi(GetId().c_str());       // get robot ID
 
 //			clockCounter++;
