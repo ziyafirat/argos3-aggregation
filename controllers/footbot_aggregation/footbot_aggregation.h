@@ -166,7 +166,8 @@ protected:
 	int numOfTimeStepTurning;
 	int left;
 	int right;
-
+	float computeProbVal;
+	float computeProbUniform;
 	int lastMove;
 	int avoidTurns;
 	int leaveTurns;
@@ -209,7 +210,9 @@ protected:
 	Real m_fWheelVelocity;
 
 	/* Base staying proba */
-	Real a, b, k;
+	Real a, b;
+	int k;
+	string logstr;
 	unsigned int minDist, m_fStayTurns, m_fLeaveTurns, m_fWalkTurns;
 	int blackSpotCounter;
 	int clockCounter;

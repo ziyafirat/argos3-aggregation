@@ -17,6 +17,8 @@ argos3/core/utility/math/vector2.h
 -
 argos3/plugins/robots/foot-bot/simulator/footbot_entity.h
 -
+limits
+-
 iostream
 -
 string
