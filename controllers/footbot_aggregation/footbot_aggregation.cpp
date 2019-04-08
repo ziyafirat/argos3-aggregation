@@ -124,15 +124,15 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 	GetNodeAttribute(t_node, "countMaxNeighbors", countMaxNeighbors);
 	GetNodeAttribute(t_node, "output", m_strOutFile);
 
-	string fileName = "Robot_" + GetId() + ".txt";
-	m_strOutFile = m_strOutFile + "/" + fileName;
-	/* Open the file for text writing */
-	m_cOutFile.open(m_strOutFile.c_str(),
-			std::ofstream::in | std::ofstream::out | std::ofstream::app);
-	if (m_cOutFile.fail()) {
-		THROW_ARGOSEXCEPTION(
-				"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
-	}
+//	string fileName = "Robot_" + GetId() + ".txt";
+//	m_strOutFile = m_strOutFile + "/" + fileName;
+//	/* Open the file for text writing */
+//	m_cOutFile.open(m_strOutFile.c_str(),
+//			std::ofstream::in | std::ofstream::out | std::ofstream::app);
+//	if (m_cOutFile.fail()) {
+//		THROW_ARGOSEXCEPTION(
+//				"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
+//	}
 
 //	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 //			m_pcRABS->GetReadings();
@@ -171,19 +171,19 @@ void CFootBotAggregation::Reset() {
 	m_pcRABA->ClearData();
 	UpdateState(STATE_WALK);
 	/* Close the output file */
-	m_cOutFile.close();
-	if (m_cOutFile.fail()) {
-		THROW_ARGOSEXCEPTION(
-				"Error closing file \"" << m_strOutFile << "\": " << ::strerror(errno));
-	}
-	/* Open the file for text writing */
-
-	m_cOutFile.open(m_strOutFile.c_str(),
-			std::ofstream::in | std::ofstream::out | std::ofstream::app);
-	if (m_cOutFile.fail()) {
-		THROW_ARGOSEXCEPTION(
-				"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
-	}
+//	m_cOutFile.close();
+//	if (m_cOutFile.fail()) {
+//		THROW_ARGOSEXCEPTION(
+//				"Error closing file \"" << m_strOutFile << "\": " << ::strerror(errno));
+//	}
+//	/* Open the file for text writing */
+//
+//	m_cOutFile.open(m_strOutFile.c_str(),
+//			std::ofstream::in | std::ofstream::out | std::ofstream::app);
+//	if (m_cOutFile.fail()) {
+//		THROW_ARGOSEXCEPTION(
+//				"Error opening file \"" << m_strOutFile << "\": " << ::strerror(errno));
+//	}
 }
 
 /****************************************/
@@ -193,9 +193,9 @@ void CFootBotAggregation::ControlStep() {
 
 	if (!avoidTurns) {
 		clockCounter++;
-		m_cOutFile << clockCounter << "	" << numOfNeighboursWhileJoining << "	"
-				<< numOfNeighboursWhileOnSite << "	" << spotInfoSite << "	"
-				<< computeProbUniform << "	" << computeProbVal << endl;
+//		m_cOutFile << clockCounter << "	" << numOfNeighboursWhileJoining << "	"
+//				<< numOfNeighboursWhileOnSite << "	" << spotInfoSite << "	"
+//				<< computeProbUniform << "	" << computeProbVal << endl;
 		switch (stateStep) {
 		case STATE_WALK:
 			WalkStep();
