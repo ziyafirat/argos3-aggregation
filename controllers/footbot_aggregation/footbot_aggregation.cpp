@@ -33,8 +33,8 @@ CFootBotAggregation::CFootBotAggregation() :
 				0), numInformedRobot(10), numInformedRobotBlack(10), numInformedRobotWhite(
 				10), numOfNeighboursWhileJoining(-1), numOfNeighboursWhileOnSite(
 				-1), spotInfoSite(-1), computeProbVal(-1), logstr(), computeProbUniform(
-				-1), informedSpot(0), spotInf(-1), clockCounter(0), exploratoryFlag(
-				0), m_pcRABA(
+				-1), informedSpot(0), swarmSize(0), spotInf(-1), clockCounter(
+				0), exploratoryFlag(0), m_pcRABA(
 		NULL), m_pcRABS(
 		NULL), m_pcRNG(NULL), m_pcGroundZ(NULL), state(0), stateStep(0), avoidTurns(
 				0), stayTurns(0), leaveTurns(0), walkTurns(1), spotTurns(0), spotFlag(
@@ -123,8 +123,9 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 	GetNodeAttribute(t_node, "numInformedRobotWhite", numInformedRobotWhite);
 	GetNodeAttribute(t_node, "countMaxNeighbors", countMaxNeighbors);
 	GetNodeAttribute(t_node, "output", m_strOutFile);
+	GetNodeAttribute(t_node, "swarmSize", swarmSize);
 
-//	string fileName = "Robot_" + GetId() + ".txt";
+	string fileName = "Robot_" + GetId() + ".txt";
 //	m_strOutFile = m_strOutFile + "/" + fileName;
 //	/* Open the file for text writing */
 //	m_cOutFile.open(m_strOutFile.c_str(),
@@ -137,15 +138,16 @@ void CFootBotAggregation::Init(TConfigurationNode& t_node) {
 //	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 //			m_pcRABS->GetReadings();
 //numInformedRobot = tPackets.size() * numInformedRobot/100;
-//	for (size_t i = 0; i < tPackets.size(); ++i) {
-//		m_pcRABA->SetData(1, i);
-//		//hear(i);
-////		if (i < 10) {
-////			m_pcRABA->SetData(1, 0);
-////		} else {
-////			m_pcRABA->SetData(1, 1);
-////		}
+//	int value = atoi(GetId().c_str());
+//
+//	if (value < numInformedRobot) {
+//		m_pcRABA->SetData(1, STATE_STAY);
+//	} else {
+//		m_pcRABA->SetData(1, STATE_WALK);
 //	}
+
+//LOGERR << "value: " << value<< "value: " << value << std::endl;
+
 	/* Create a random number generator. We use the 'argos' category so
 	 that creation, reset, seeding and cleanup are managed by ARGoS. */
 	m_pcRNG = CRandom::CreateRNG("argos");
@@ -170,6 +172,16 @@ void CFootBotAggregation::Reset() {
 	lexicon.clear();
 	m_pcRABA->ClearData();
 	UpdateState(STATE_WALK);
+
+	int value = atoi(GetId().c_str());
+
+	if (value < numInformedRobot) {
+		m_pcRABA->SetData(1, 1);
+	} else {
+		m_pcRABA->SetData(1, 0);
+	}
+
+	//LOGERR << "value: " << value<< "value: " << value << std::endl;
 	/* Close the output file */
 //	m_cOutFile.close();
 //	if (m_cOutFile.fail()) {
@@ -404,6 +416,7 @@ void CFootBotAggregation::LeaveStep() {
 void CFootBotAggregation::UpdateState(unsigned short int newState) {
 
 	m_pcRABA->SetData(0, newState);
+
 	stateStep = newState;
 	switch (newState) {
 	case STATE_WALK:
@@ -631,20 +644,27 @@ unsigned int CFootBotAggregation::CountNeighbours() {
 	const CCI_RangeAndBearingSensor::TReadings& tPackets =
 			m_pcRABS->GetReadings();
 	unsigned int counter = 1;
+	int value = atoi(GetId().c_str());
 	for (size_t i = 0; i < tPackets.size(); ++i) {
 
-		if (tPackets[i].Range < minDist) {
-//			LOGERR << "RangeandBearng:" << tPackets[i].Range << " robot "
-//							<< GetId() << std::endl;
-			if (probaRule != 4 and tPackets[i].Data[0] == STATE_STAY) {
-				//hear(tPackets[i].Data[0]);
-				++counter;
-			} else {
-				++counter;
+		//	if (tPackets[i].Range < minDist) {
 
-			}
-
+		if (probaRule == 5 and tPackets[i].Data[0] == STATE_STAY
+				and tPackets[i].Data[1] == 1) {
+			++counter;
+//			LOGERR << "---counter:" << counter << " robot:" << value
+//					<< std::endl;
 		}
+
+//		else if (probaRule != 4 and tPackets[i].Data[0] == STATE_STAY) {
+//			//hear(tPackets[i].Data[0]);
+//			++counter;
+//		} else {
+//			++counter;
+//
+//		}
+
+		//}
 	}
 	if (counter > maxNeighborsSeen) {
 		maxNeighborsSeen = counter;
@@ -706,7 +726,11 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 				numOfNeighboursWhileOnSite = n;
 				spotInfoSite = spotInf;
 			}
+			//if (n > 0) {
 			return 1;
+//			} else {
+//				return 0;
+//			}
 			break;
 		case STATE_STAY: //1-P_leave
 
@@ -723,8 +747,56 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 
 			//if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
 
-			//if (value >= numInformedRobot) { // if robot non informed robot
+			float Res1 = std::numeric_limits<float>::infinity();
+			Res1 = Exp(-a * (k - Abs(n - numOfNeighboursWhileJoining)));
+			computeProbVal = Res1;
 
+			float one = 1.0f;
+
+			if (value >= numInformedRobot) { // if robot non informed robot
+
+				if (n > 0) {
+
+					return Min(one, Res1);
+				} else {
+					return 1;
+				}
+			} else {
+
+				return Min(one, Res1);
+			}
+
+			break;
+		}
+		break;
+	case 8:   //functions sub prop new eq
+		--n;
+		switch (stateStep) {
+		case STATE_WALK: //P_join
+
+			if (numOfNeighboursWhileJoining < 0) { //while non informed robot join, calculate number of neighbors
+				numOfNeighboursWhileJoining = n;  // n is counted neighbors
+				numOfNeighboursWhileOnSite = n;
+				spotInfoSite = spotInf;
+			}
+			return 1;
+			break;
+		case STATE_STAY: //1-P_leave
+
+			numOfNeighboursWhileOnSite = n;
+			int value = atoi(GetId().c_str());       // get robot ID
+
+			//			clockCounter++;
+			//0 is black and 1 is white.
+			//m_cOutFile << clockCounter << "	" << n << "	" << spotInf << endl;
+
+			//			LOGERR << "clockCounter:" << clockCounter << "	neigh:" << n
+			//					<< " spotInf:" << spotInf << " robot:" << GetId()
+			//					<< " numInfR:" << numInformedRobot << std::endl;
+
+			//if (value >= numInformedRobot && numInformedRobot > 0) { // if robot non informed robot and total informed > 0 use new method
+
+			if (value >= numInformedRobot) { // if robot non informed robot
 
 				float Res1 = std::numeric_limits<float>::infinity();
 
@@ -733,21 +805,20 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 				Res1 = Exp(-b * (k - Abs(n - numOfNeighboursWhileJoining)));
 				computeProbVal = Res1;
 
-
-//				LOGERR << "clockCounter:" << clockCounter << "	neigh:" << n
-//						<< " nnres:" << nnres << " robot:" << GetId()
-//						<< " kkres:" << kkres << " Res1:" << Res1 << std::endl;
+				//				LOGERR << "clockCounter:" << clockCounter << "	neigh:" << n
+				//						<< " nnres:" << nnres << " robot:" << GetId()
+				//						<< " kkres:" << kkres << " Res1:" << Res1 << std::endl;
 
 				float one = 1.0f;
 
 				return Min(one, Res1);
 
-//			} else {
-//				float Ress = std::numeric_limits<float>::infinity();
-//				Ress = exp(-b * n);
-//				computeProbVal = Ress;
-//				return Ress;
-//			}
+			} else {
+				float Ress = std::numeric_limits<float>::infinity();
+				Ress = exp(-2.6 * n);
+				computeProbVal = Ress;
+				return Ress;
+			}
 			break;
 		}
 		break;
@@ -780,6 +851,8 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 			if (value >= numInformedRobot) { // if robot non informed robot
 				Real Res1 = Exp(
 						-b * (k - Abs(n - numOfNeighboursWhileJoining)));
+//				Real Res1 = Exp(
+//						-b * Abs(k - Abs(n - numOfNeighboursWhileJoining)));
 
 				Real one = 1.0f;
 
@@ -829,6 +902,8 @@ float CFootBotAggregation::ComputeProba(unsigned int n) {
 					return pLeaveNonInformed[6];
 				else if (n == X - 7 || n == X + 7) // X + or -7 robots p(leave) -> 1.0000000000
 					return pLeaveNonInformed[7];
+				else if (n == X - 8 || n == X + 8) // X + or -6 robots p(leave) -> 0.1108031584
+					return pLeaveNonInformed[6];
 				else
 					// X + or -  > 7 robots p(leave) -> 1.0000000000
 					return pLeaveNonInformed[7];

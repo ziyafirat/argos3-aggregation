@@ -223,7 +223,7 @@ protected:
 	int obstacleFlag;
 	unsigned int goStraight, walkInsideSpot, leaveInsideSpot, waitInsideSpot,
 			informedSpot, numInformedRobot, numInformedRobotBlack,
-			numInformedRobotWhite;
+			numInformedRobotWhite,swarmSize;
 
 	/* Angle tolerance range to go straight.
 	 * It is set to [-alpha,alpha]. */
